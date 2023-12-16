@@ -91,7 +91,7 @@ export default class Board {
 
                     if (cell == 2) this.drawFood(context, x, y)
                 } else {
-                    this.drawWall(context, x, y)
+                    this.drawLightWall(context, x, y)
                 }
 
                 
@@ -104,7 +104,57 @@ export default class Board {
         context.fillRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize)
 
         context.strokeStyle = "blue"
-        context.strokeRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize)
+        context.strokeRect((x + 0.25) * this.cellSize, (y + 0.25) * this.cellSize, this.cellSize * 0.5, this.cellSize * 0.5)
+    }
+
+    drawLightWall(context, x, y){
+        context.strokeStyle = "blue"
+        const wall_above = y == 0 || this.matrix[y-1][x] == 0
+        const wall_below = y == this.height-1 || this.matrix[y+1][x] == 0
+        const wall_left = x == 0 || this.matrix[y][x-1] == 0
+        const wall_right = x == this.width-1 || this.matrix[y][x+1] == 0
+
+        const delta = 0.25
+        const xa = x - delta
+        const xb = x + delta
+        const ya = y - delta
+        const yb = y + delta
+
+        if (!wall_left){
+            const yu = wall_above ? y : yb
+            const yd = wall_below ? y : ya
+            context.beginPath()
+            context.moveTo(xb*this.cellSize, yu*this.cellSize)
+            context.lineTo(xb*this.cellSize, (yd+1)*this.cellSize)
+            context.stroke()
+        }
+
+        if (!wall_right){
+            const yu = wall_above ? y : yb
+            const yd = wall_below ? y : ya
+            context.beginPath()
+            context.moveTo((xa+1)*this.cellSize, yu*this.cellSize)
+            context.lineTo((xa+1)*this.cellSize, (yd+1)*this.cellSize)
+            context.stroke()
+        }
+
+        if (!wall_above){
+            const xl = wall_left ? x : xb
+            const xd = wall_right ? x : xa
+            context.beginPath()
+            context.moveTo(xl*this.cellSize, yb*this.cellSize)
+            context.lineTo((xd+1)*this.cellSize, yb*this.cellSize)
+            context.stroke()
+        }
+
+        if (!wall_below){
+            const xl = wall_left ? x : xb
+            const xd = wall_right ? x : xa
+            context.beginPath()
+            context.moveTo(xl*this.cellSize, (ya+1)*this.cellSize)
+            context.lineTo((xd+1)*this.cellSize, (ya+1)*this.cellSize)
+            context.stroke()
+        }
     }
 
     drawFood(context, x, y){
