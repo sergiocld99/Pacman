@@ -8,8 +8,6 @@ Open this project in VSCode and launch main.js using Live Server extension.
 
 ## Features to add
 - Score
-- Lives count
 - Tunnel
-- Score
 - Fruits (bonus)
 - More levels

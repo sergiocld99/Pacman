@@ -105,11 +105,11 @@ export default class Ghost extends Entity {
             case 0:
             case 3:
                 if (this.x != this.pacman.x) return false
-                return this.y == this.pacman.y || super.fixedY() == this.pacman.y
+                return this.y == this.pacman.y || super.fixedY() == this.pacman.y || this.y == this.pacman.fixedY()
             case 1:
             case 2:
                 if (this.y != this.pacman.y) return false
-                return this.x == this.pacman.x || super.fixedX() == this.pacman.x
+                return this.x == this.pacman.x || super.fixedX() == this.pacman.x || this.x == this.pacman.fixedX()
         }
 
     }

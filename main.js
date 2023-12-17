@@ -1,18 +1,19 @@
 import Board from "./classes/board.js"
 import Ghost from "./classes/ghost.js"
+import Match from "./classes/match.js"
 import Pacman from "./classes/pacman.js"
 
 // HTML elements
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext("2d")
 
-const pacman0 = document.getElementById("pacman0")
-const pacman1 = document.getElementById("pacman1")
-const pacman2 = document.getElementById("pacman2")
-const pacman3 = document.getElementById("pacman3")
-const pacmanImgs = [pacman0, pacman1, pacman2, pacman3]
+const pacmanImgs = Array(4)
+for (let i=0; i<4; i++) pacmanImgs[i] = document.getElementById(`pacman${i}`)
 
 const ghostsImg = document.getElementById("ghosts")
+
+const liveImgs = Array(3)
+for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
 
 // Constants
 const BOARD_WIDTH = 28
@@ -21,13 +22,15 @@ const CELL_SIZE = 20
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
 const PACMAN_TICK_PERIOD = 5
+const LIVES_MAX = 3
 
 // Global variables
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
 const pacman = new Pacman(board, pacmanImgs)
+const match = new Match(LIVES_MAX)
 
 const ghostEntities = Array(4)
-for (let i=0; i<ghostEntities.length; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
+for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
 
 let ticks = 0
 
@@ -44,6 +47,13 @@ const setup = () => {
     })
 }
 
+const resetGame = () => {
+    board.reset()
+    pacman.reset()
+    match.reset()
+    ghostEntities.forEach(g => g.reset())
+}
+
 // Loop
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
@@ -57,16 +67,18 @@ const gameLoop = () => {
 
     ghostEntities.forEach(g => {
         if (g.checkPacmanCollision()){
-            pacman.reset()
-            ghostEntities.forEach(g => g.reset())
+            match.loseLive()
+            if (match.shouldResetGame()) resetGame()
+            else {
+                pacman.reset()
+                ghostEntities.forEach(g => g.reset())
+            }
             return
         }
     })
 
     if (!board.checkExistFood()){
-        board.reset()
-        pacman.reset()
-        ghostEntities.forEach(g => g.reset())
+        resetGame()
     }
 
     pacman.draw(canvasContext, CELL_SIZE)
@@ -74,6 +86,8 @@ const gameLoop = () => {
     ghostEntities.forEach(g => {
         g.draw(canvasContext, CELL_SIZE)
     })
+
+    liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')
 }
 
 // Main program
