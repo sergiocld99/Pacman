@@ -12,7 +12,7 @@ const pacman2 = document.getElementById("pacman2")
 const pacman3 = document.getElementById("pacman3")
 const pacmanImgs = [pacman0, pacman1, pacman2, pacman3]
 
-const ghosts = document.getElementById("ghosts")
+const ghostsImg = document.getElementById("ghosts")
 
 // Constants
 const BOARD_WIDTH = 28
@@ -26,11 +26,8 @@ const PACMAN_TICK_PERIOD = 5
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
 const pacman = new Pacman(board, pacmanImgs)
 
-const ghost0 = new Ghost(ghosts, 0, board)
-const ghost1 = new Ghost(ghosts, 1, board)
-const ghost2 = new Ghost(ghosts, 2, board)
-const ghost3 = new Ghost(ghosts, 3, board)
-const ghostEntities = [ghost0, ghost1, ghost2, ghost3]
+const ghostEntities = Array(4)
+for (let i=0; i<ghostEntities.length; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
 
 let ticks = 0
 
@@ -57,6 +54,14 @@ const gameLoop = () => {
         ghostEntities.forEach(g => g.moveAuto())
         ticks = 0
     }
+
+    ghostEntities.forEach(g => {
+        if (g.checkPacmanCollision()){
+            pacman.reset()
+            ghostEntities.forEach(g => g.reset())
+            return
+        }
+    })
 
     if (!board.checkExistFood()){
         board.reset()

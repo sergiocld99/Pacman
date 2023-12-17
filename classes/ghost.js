@@ -2,10 +2,11 @@ import Entity from "./entity.js"
 
 export default class Ghost extends Entity {
 
-    constructor(fullImg, number, board) {
+    constructor(fullImg, number, board, pacman) {
         super(board, 11 + number + (number > 1 ? 2 : 0), 14, number % 3 ? 0 : 3)
         this.fullImg = fullImg
         this.number = number
+        this.pacman = pacman
         this.reset()
     }
 
@@ -26,17 +27,21 @@ export default class Ghost extends Entity {
     }
 
     changeToRandomDirection(){
-        this.direction = Math.floor(Math.random() * 4)
+        switch (this.direction) {
+            case 0:
+            case 3:
+                this.direction = Math.random() < 0.5 ? 1 : 2
+                break;
+            case 1:
+            case 2:
+                this.direction = Math.random() < 0.5 ? 0 : 3
+                break;
+        }
     }
 
     moveUp(){
         if (this.canMoveTo(this.x, this.y-0.5)){
-            if (this.direction == 0){
-                this.y -= 0.5
-            } else {
-                this.x = this.fixX(this.x)
-                this.direction = 0
-            }
+            super.moveUp()
         } else {
             if (this.bounces < this.bounceLimit) this.direction = 3
             else {
@@ -44,7 +49,7 @@ export default class Ghost extends Entity {
                     this.direction = this.x < 14 ? 2 : 1
                     this.inHouse = false
                 } else {
-                    this.direction = Math.random() < 0.5 ? 1 : 2
+                    this.changeToRandomDirection()
                 }
             }
         }
@@ -54,12 +59,7 @@ export default class Ghost extends Entity {
         if (this.x == 14 && this.y == 13){
             this.direction = 0
         } else if (this.canMoveTo(this.x-0.5, this.y)){
-            if (this.direction == 1){
-                this.x -= 0.5
-            } else {
-                this.y = this.fixY(this.y)
-                this.direction = 1
-            }
+            super.moveLeft()
         } else {
             this.changeToRandomDirection()
         }
@@ -69,23 +69,13 @@ export default class Ghost extends Entity {
         if (this.x == 13 && this.y == 13){
             this.direction = 0
         } else if (this.canMoveTo(this.x+0.5, this.y)){
-            if (this.direction == 2){
-                this.x += 0.5
-            } else {
-                this.y = this.fixY(this.y)
-                this.direction = 2
-            }
+            super.moveRight()
         } else this.changeToRandomDirection()
     }
 
     moveDown(){
         if (this.canMoveTo(this.x, this.y+0.5)){
-            if (this.direction == 3){
-                this.y += 0.5
-            } else {
-                this.x = this.fixX(this.x)
-                this.direction = 3
-            }
+            super.moveDown()
         } else {
             if (this.inHouse) this.direction = 0
             else this.changeToRandomDirection()
@@ -107,6 +97,21 @@ export default class Ghost extends Entity {
                 this.moveDown()
                 break;
         }
+    }
+
+    checkPacmanCollision(){
+        
+        switch (this.direction) {
+            case 0:
+            case 3:
+                if (this.x != this.pacman.x) return false
+                return this.y == this.pacman.y || super.fixedY() == this.pacman.y
+            case 1:
+            case 2:
+                if (this.y != this.pacman.y) return false
+                return this.x == this.pacman.x || super.fixedX() == this.pacman.x
+        }
+
     }
 
     draw(context, cellSize){

@@ -16,45 +16,25 @@ export default class Pacman extends Entity {
 
     moveUp(){
         if (this.canMoveTo(this.x, this.y-0.5)){
-            if (this.direction == 0){
-                this.y -= 0.5
-            } else {
-                this.x = this.fixX(this.x)
-                this.direction = 0
-            }
+            super.moveUp()
         }
     }
 
     moveLeft(){
         if (this.canMoveTo(this.x-0.5, this.y)){
-            if (this.direction == 1){
-                this.x -= 0.5
-            } else {
-                this.y = this.fixY(this.y)
-                this.direction = 1
-            }
+            super.moveLeft()
         }
     }
 
     moveRight(){
         if (this.canMoveTo(this.x+0.5, this.y)){
-            if (this.direction == 2){
-                this.x += 0.5
-            } else {
-                this.y = this.fixY(this.y)
-                this.direction = 2
-            }
+            super.moveRight()
         }
     }
 
     moveDown(){
         if (this.canMoveTo(this.x, this.y+0.5)){
-            if (this.direction == 3){
-                this.y += 0.5
-            } else {
-                this.x = this.fixX(this.x)
-                this.direction = 3
-            }
+            super.moveDown()
         }
     }
 
