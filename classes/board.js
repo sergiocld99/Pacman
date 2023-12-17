@@ -192,6 +192,13 @@ export default class Board {
         return ok
     }
 
+    canGhostMoveTo(x,y){
+        const value = this.matrix[y][x]
+        const ok = value != this.cellTypes.Wall
+    
+        return ok
+    }
+
     checkExistFood(){
         return this.foodCount > 0
     }

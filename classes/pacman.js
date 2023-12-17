@@ -1,29 +1,17 @@
-export default class Pacman {
+import Entity from "./entity.js"
+
+export default class Pacman extends Entity {
 
     constructor(board, pacmanImgs) {
-        this.board = board
+        super(board, board.width / 2 - 1, board.height - 8, 2)
         this.pacmanImgs = pacmanImgs
-        this.reset()
-    }
-
-    reset(){
-        this.x = this.board.width / 2 - 1
-        this.y = this.board.height - 8
-        this.direction = 2
+        super.reset()
     }
 
     canMoveTo(x,y){
-        const x_try = this.fixX(x)
-        const y_try = this.fixY(y)
+        const x_try = super.fixX(x)
+        const y_try = super.fixY(y)
         return this.board.canPacmanMoveTo(x_try, y_try)
-    }
-
-    fixX(x){
-        return this.direction == 2 ? Math.ceil(x) : Math.floor(x)
-    }
-
-    fixY(y){
-        return this.direction == 3 ? Math.ceil(y) : Math.floor(y)
     }
 
     moveUp(){

@@ -1,4 +1,5 @@
 import Board from "./classes/board.js"
+import Ghost from "./classes/ghost.js"
 import Pacman from "./classes/pacman.js"
 
 // HTML elements
@@ -11,6 +12,8 @@ const pacman2 = document.getElementById("pacman2")
 const pacman3 = document.getElementById("pacman3")
 const pacmanImgs = [pacman0, pacman1, pacman2, pacman3]
 
+const ghosts = document.getElementById("ghosts")
+
 // Constants
 const BOARD_WIDTH = 28
 const BOARD_HEIGHT = 31
@@ -22,6 +25,13 @@ const PACMAN_TICK_PERIOD = 5
 // Global variables
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
 const pacman = new Pacman(board, pacmanImgs)
+
+const ghost0 = new Ghost(ghosts, 0, board)
+const ghost1 = new Ghost(ghosts, 1, board)
+const ghost2 = new Ghost(ghosts, 2, board)
+const ghost3 = new Ghost(ghosts, 3, board)
+const ghostEntities = [ghost0, ghost1, ghost2, ghost3]
+
 let ticks = 0
 
 // Setup
@@ -44,15 +54,21 @@ const gameLoop = () => {
 
     if (++ticks >= PACMAN_TICK_PERIOD){
         pacman.moveAuto()
+        ghostEntities.forEach(g => g.moveAuto())
         ticks = 0
     }
 
     if (!board.checkExistFood()){
         board.reset()
         pacman.reset()
+        ghostEntities.forEach(g => g.reset())
     }
 
     pacman.draw(canvasContext, CELL_SIZE)
+
+    ghostEntities.forEach(g => {
+        g.draw(canvasContext, CELL_SIZE)
+    })
 }
 
 // Main program
