@@ -17,10 +17,12 @@ const BOARD_HEIGHT = 31
 const CELL_SIZE = 20
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
+const PACMAN_TICK_PERIOD = 5
 
 // Global variables
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
 const pacman = new Pacman(board, pacmanImgs)
+let ticks = 0
 
 // Setup
 const setup = () => {
@@ -28,8 +30,6 @@ const setup = () => {
     
     // Keyboard listener
     document.addEventListener("keydown", e => {
-        console.log(e.key)
-
         if (e.key === "ArrowUp") pacman.moveUp()
         else if (e.key === "ArrowDown") pacman.moveDown()
         else if (e.key === "ArrowLeft") pacman.moveLeft()
@@ -41,6 +41,17 @@ const setup = () => {
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
     board.draw(canvasContext)
+
+    if (++ticks >= PACMAN_TICK_PERIOD){
+        pacman.moveAuto()
+        ticks = 0
+    }
+
+    if (!board.checkExistFood()){
+        board.reset()
+        pacman.reset()
+    }
+
     pacman.draw(canvasContext, CELL_SIZE)
 }
 

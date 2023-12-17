@@ -19,6 +19,15 @@ export default class Board {
     reset(){
         this.matrix = Array.from({length: this.height}, () => Array(this.width).fill(this.cellTypes.Wall))
         this.placePaths()
+
+        let count = 0
+
+        this.matrix.forEach(row => row.forEach(val => {
+            if (val == this.cellTypes.Food) count++
+        }))
+
+        this.foodCount = count
+        console.log("Food count: ", this.foodCount)
     }
 
     placePaths() {
@@ -172,11 +181,19 @@ export default class Board {
 
     canPacmanMoveTo(x,y){
         const value = this.matrix[y][x]
-        return value != this.cellTypes.Wall && value != this.cellTypes.GhostHouse
+        const ok = value != this.cellTypes.Wall && value != this.cellTypes.GhostHouse
+    
+        if (value == this.cellTypes.Food){
+            // eat food
+            this.matrix[y][x] = this.cellTypes.Space
+            this.foodCount -= 1
+        }
+
+        return ok
     }
 
-
-    foo() {
-        console.log(this.matrix)
+    checkExistFood(){
+        return this.foodCount > 0
     }
+
 }
