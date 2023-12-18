@@ -29,14 +29,6 @@ export default class Board {
 
         this.foodCount = count
         console.log("Food count: ", this.foodCount)
-
-        this.level = 1
-    }
-
-    nextLevel(){
-        let aux = this.level
-        this.reset()
-        this.level = aux + 1
     }
 
     placePaths() {
@@ -114,7 +106,7 @@ export default class Board {
         }
     }
 
-    draw(context) {
+    draw(context, level) {
         this.matrix.forEach((row, y) => {
             row.forEach((cell, x) => {
                 if (cell) {
@@ -123,14 +115,14 @@ export default class Board {
 
                     if (cell == this.cellTypes.Food) this.drawFood(context, x, y)
                 } else {
-                    this.drawLightWall(context, x, y)
+                    this.drawLightWall(context, x, y, level)
                 }
             })
         })
     }
 
-    drawLightWall(context, x, y){
-        context.strokeStyle = this.wallColors[(this.level-1) % 3]
+    drawLightWall(context, x, y, level){
+        context.strokeStyle = this.wallColors[(level-1) % 3]
         const wallType = this.cellTypes.Wall
         const wall_above = y == 0 || this.matrix[y-1][x] == wallType
         const wall_below = y == this.height-1 || this.matrix[y+1][x] == wallType
@@ -214,11 +206,6 @@ export default class Board {
 
     checkExistFood(){
         return this.foodCount > 0
-    }
-
-    getEntityLevel(){
-        let speed_level = Math.floor((this.level-1) / 3)
-        return Math.min(speed_level, 3)
     }
 
     isTunnel(x){

@@ -23,14 +23,14 @@ const BOARD_HEIGHT = 31
 const CELL_SIZE = 20
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
-const PACMAN_TICK_PERIOD = [4, 4, 3, 2]
+const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
 const GHOST_TICK_PERIOD = [4, 3, 2, 1]
-const LIVES_MAX = 3
+const LIVES_START = 2
 
 // Global variables
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
 const pacman = new Pacman(board, pacmanImgs)
-const match = new Match(LIVES_MAX)
+const match = new Match(LIVES_START)
 
 const ghostEntities = Array(4)
 for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
@@ -40,7 +40,7 @@ let ticks_ghost = 0
 
 // Setup
 const setup = () => {
-    board.reset()
+    resetGame()
     
     // Keyboard listener
     document.addEventListener("keydown", e => {
@@ -56,23 +56,27 @@ const resetGame = () => {
     pacman.reset()
     match.reset()
     ghostEntities.forEach(g => g.reset())
+
+    match.start()
 }
 
 // Loop
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
-    board.draw(canvasContext)
+    board.draw(canvasContext, match.level)
 
-    let entity_level = board.getEntityLevel()
+    if (match.isStarted()){
+        let entity_level = match.getEntityLevel()
 
-    if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
-        ghostEntities.forEach(g => g.moveAuto())
-        ticks_ghost = 0
-    }
+        if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
+            ghostEntities.forEach(g => g.moveAuto())
+            ticks_ghost = 0
+        }
 
-    if (++ticks >= PACMAN_TICK_PERIOD[entity_level]){
-        pacman.moveAuto()
-        ticks = 0
+        if (++ticks >= PACMAN_TICK_PERIOD[entity_level]){
+            pacman.moveAuto()
+            ticks = 0
+        }
     }
 
     ghostEntities.forEach(g => {
@@ -88,7 +92,8 @@ const gameLoop = () => {
     })
 
     if (!board.checkExistFood()){
-        board.nextLevel()
+        match.nextLevel()
+        board.reset()
         pacman.reset()
         ghostEntities.forEach(g => g.reset())
     }
@@ -100,7 +105,7 @@ const gameLoop = () => {
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')
-    levelTxt.innerText = "Level " + board.level
+    levelTxt.innerText = "Level " + match.level
 }
 
 // Main program
