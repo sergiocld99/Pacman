@@ -15,13 +15,16 @@ const ghostsImg = document.getElementById("ghosts")
 const liveImgs = Array(3)
 for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
 
+const levelTxt = document.getElementById("level_txt")
+
 // Constants
 const BOARD_WIDTH = 28
 const BOARD_HEIGHT = 31
 const CELL_SIZE = 20
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
-const PACMAN_TICK_PERIOD = 4
+const PACMAN_TICK_PERIOD = [4, 4, 3, 2]
+const GHOST_TICK_PERIOD = [4, 3, 2, 1]
 const LIVES_MAX = 3
 
 // Global variables
@@ -60,12 +63,14 @@ const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
     board.draw(canvasContext)
 
-    if (++ticks_ghost >= Math.max(PACMAN_TICK_PERIOD - board.level + 1, 1)){
+    let entity_level = board.getEntityLevel()
+
+    if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
         ghostEntities.forEach(g => g.moveAuto())
         ticks_ghost = 0
     }
 
-    if (++ticks >= Math.max(PACMAN_TICK_PERIOD - Math.floor(board.level / 3), 1)){
+    if (++ticks >= PACMAN_TICK_PERIOD[entity_level]){
         pacman.moveAuto()
         ticks = 0
     }
@@ -95,6 +100,7 @@ const gameLoop = () => {
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')
+    levelTxt.innerText = "Level " + board.level
 }
 
 // Main program

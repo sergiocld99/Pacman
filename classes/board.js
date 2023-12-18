@@ -215,4 +215,9 @@ export default class Board {
         return this.foodCount > 0
     }
 
+    getEntityLevel(){
+        let speed_level = Math.floor((this.level-1) / 2)
+        return Math.min(speed_level, 3)
+    }
+
 }
