@@ -29,7 +29,7 @@ export default class Match {
     start(){
         this.status = this.statusList.STARTING
         new Audio("sounds/start.mp3").play()
-        this.siren?.stop()
+        this.siren?.pause()
 
         setTimeout(() => {
             this.status = this.statusList.PLAYING
