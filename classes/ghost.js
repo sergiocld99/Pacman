@@ -30,11 +30,19 @@ export default class Ghost extends Entity {
         switch (this.direction) {
             case 0:
             case 3:
-                this.direction = Math.random() < 0.5 ? 1 : 2
+                if (Math.random() < 0.5){
+                    this.direction = (this.board.canGhostMoveTo(this.x-1, this.y)) ? 1 : 2
+                } else {
+                    this.direction = (this.board.canGhostMoveTo(this.x+1, this.y)) ? 2 : 1
+                }
                 break;
             case 1:
             case 2:
-                this.direction = Math.random() < 0.5 ? 0 : 3
+                if (Math.random() < 0.5){
+                    this.direction = (this.board.canGhostMoveTo(this.x, this.y-1)) ? 0 : 3
+                } else {
+                    this.direction = (this.board.canGhostMoveTo(this.x, this.y+1)) ? 3 : 0
+                }
                 break;
         }
     }
