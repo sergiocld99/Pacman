@@ -10,6 +10,14 @@ export default class Match {
         }
 
         this.reset()
+
+        // ghosts siren
+        setInterval(() => {
+            if (this.isStarted()) {
+                this.siren = new Audio("sounds/ghosts.mp3")
+                this.siren.play()
+            }
+        }, 2760);
     }
 
     reset(){
@@ -21,6 +29,7 @@ export default class Match {
     start(){
         this.status = this.statusList.STARTING
         new Audio("sounds/start.mp3").play()
+        this.siren?.stop()
 
         setTimeout(() => {
             this.status = this.statusList.PLAYING

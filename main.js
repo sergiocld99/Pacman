@@ -112,5 +112,4 @@ const gameLoop = () => {
 setup()
 setInterval(gameLoop, 20);
 
-
 // ---------------- AUXILIAR FUNCTIONS ---------------------------
