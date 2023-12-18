@@ -6,6 +6,7 @@ export default class Board {
         this.cellSize = cellSize
         this.foodRadius = foodRadius
         this.delta = wallOffset
+        this.wallColors = ["blue", "purple", "orange"]
 
         this.cellTypes = {
             Wall: 0,
@@ -129,7 +130,7 @@ export default class Board {
     }
 
     drawLightWall(context, x, y){
-        context.strokeStyle = this.level % 2 ? "blue" : "purple"
+        context.strokeStyle = this.wallColors[(this.level-1) % 3]
         const wallType = this.cellTypes.Wall
         const wall_above = y == 0 || this.matrix[y-1][x] == wallType
         const wall_below = y == this.height-1 || this.matrix[y+1][x] == wallType
@@ -216,7 +217,7 @@ export default class Board {
     }
 
     getEntityLevel(){
-        let speed_level = Math.floor((this.level-1) / 2)
+        let speed_level = Math.floor((this.level-1) / 3)
         return Math.min(speed_level, 3)
     }
 
