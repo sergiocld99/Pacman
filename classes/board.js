@@ -28,6 +28,14 @@ export default class Board {
 
         this.foodCount = count
         console.log("Food count: ", this.foodCount)
+
+        this.level = 1
+    }
+
+    nextLevel(){
+        let aux = this.level
+        this.reset()
+        this.level = aux + 1
     }
 
     placePaths() {
@@ -121,7 +129,7 @@ export default class Board {
     }
 
     drawLightWall(context, x, y){
-        context.strokeStyle = "blue"
+        context.strokeStyle = this.level % 2 ? "blue" : "purple"
         const wallType = this.cellTypes.Wall
         const wall_above = y == 0 || this.matrix[y-1][x] == wallType
         const wall_below = y == this.height-1 || this.matrix[y+1][x] == wallType
@@ -187,6 +195,10 @@ export default class Board {
             // eat food
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
+
+            // play sound
+            const audio = new Audio(`sounds/food${this.foodCount % 2 ? 1 : 2}.mp3`)
+            audio.play()
         }
 
         return ok

@@ -11,3 +11,4 @@ Open this project in VSCode and launch main.js using Live Server extension.
 - Tunnel
 - Fruits (bonus)
 - More levels
+- All of the sounds

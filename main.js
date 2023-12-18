@@ -21,7 +21,7 @@ const BOARD_HEIGHT = 31
 const CELL_SIZE = 20
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
-const PACMAN_TICK_PERIOD = 5
+const PACMAN_TICK_PERIOD = 4
 const LIVES_MAX = 3
 
 // Global variables
@@ -33,6 +33,7 @@ const ghostEntities = Array(4)
 for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
 
 let ticks = 0
+let ticks_ghost = 0
 
 // Setup
 const setup = () => {
@@ -40,10 +41,10 @@ const setup = () => {
     
     // Keyboard listener
     document.addEventListener("keydown", e => {
-        if (e.key === "ArrowUp") pacman.moveUp()
-        else if (e.key === "ArrowDown") pacman.moveDown()
-        else if (e.key === "ArrowLeft") pacman.moveLeft()
-        else if (e.key === "ArrowRight") pacman.moveRight()
+        if (e.key === "ArrowUp" && pacman.direction != 0) pacman.moveUp()
+        else if (e.key === "ArrowDown" && pacman.direction != 3) pacman.moveDown()
+        else if (e.key === "ArrowLeft" && pacman.direction != 1) pacman.moveLeft()
+        else if (e.key === "ArrowRight" && pacman.direction != 2) pacman.moveRight()
     })
 }
 
@@ -59,9 +60,13 @@ const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
     board.draw(canvasContext)
 
-    if (++ticks >= PACMAN_TICK_PERIOD){
-        pacman.moveAuto()
+    if (++ticks_ghost >= Math.max(PACMAN_TICK_PERIOD - board.level + 1, 1)){
         ghostEntities.forEach(g => g.moveAuto())
+        ticks_ghost = 0
+    }
+
+    if (++ticks >= Math.max(PACMAN_TICK_PERIOD - Math.floor(board.level / 3), 1)){
+        pacman.moveAuto()
         ticks = 0
     }
 
@@ -78,7 +83,9 @@ const gameLoop = () => {
     })
 
     if (!board.checkExistFood()){
-        resetGame()
+        board.nextLevel()
+        pacman.reset()
+        ghostEntities.forEach(g => g.reset())
     }
 
     pacman.draw(canvasContext, CELL_SIZE)
