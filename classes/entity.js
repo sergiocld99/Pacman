@@ -64,4 +64,9 @@ export default class Entity {
             this.direction = 3
         }
     }
+
+    checkTunnel(){
+        if (this.x >= this.board.width-1) this.x = 0
+        else if (this.x <= 0) this.x = this.board.width-1
+    }
 }

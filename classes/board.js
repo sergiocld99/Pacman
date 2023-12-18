@@ -220,4 +220,8 @@ export default class Board {
         return Math.min(speed_level, 3)
     }
 
+    isTunnel(x){
+        return x <= 0 || x >= this.width
+    }
+
 }

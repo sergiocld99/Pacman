@@ -11,6 +11,10 @@ export default class Pacman extends Entity {
     canMoveTo(x,y){
         const x_try = super.fixX(x)
         const y_try = super.fixY(y)
+
+        // check tunnel
+        super.checkTunnel()
+
         return this.board.canPacmanMoveTo(x_try, y_try)
     }
 

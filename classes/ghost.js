@@ -22,6 +22,9 @@ export default class Ghost extends Entity {
         const y_try = super.fixY(y)
         let ok = this.board.canGhostMoveTo(x_try, y_try)
 
+        // check tunnel
+        super.checkTunnel()
+
         if (!ok) this.bounces++
         return ok
     }
@@ -48,7 +51,9 @@ export default class Ghost extends Entity {
     }
 
     moveUp(){
-        if (this.canMoveTo(this.x, this.y-0.5)){
+        if (this.y == 14 && this.x == 6){
+            this.changeToRandomDirection()
+        } else if (this.canMoveTo(this.x, this.y-0.5)){
             super.moveUp()
         } else {
             if (this.bounces < this.bounceLimit) this.direction = 3
@@ -82,7 +87,9 @@ export default class Ghost extends Entity {
     }
 
     moveDown(){
-        if (this.canMoveTo(this.x, this.y+0.5)){
+        if (this.y == 14 && this.x == 21){
+            this.changeToRandomDirection()
+        } else if (this.canMoveTo(this.x, this.y+0.5)){
             super.moveDown()
         } else {
             if (this.inHouse) this.direction = 0

@@ -8,6 +8,5 @@ Open this project in VSCode and launch main.js using Live Server extension.
 
 ## Features to add
 - Score
-- Tunnel
 - Fruits (bonus)
 - All of the sounds
