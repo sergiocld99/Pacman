@@ -10,14 +10,6 @@ export default class Match {
         }
 
         this.reset()
-
-        // ghosts siren
-        setInterval(() => {
-            if (this.isStarted()) {
-                this.siren = new Audio("sounds/ghosts.mp3")
-                this.siren.play()
-            }
-        }, 2760);
     }
 
     reset(){
@@ -29,11 +21,17 @@ export default class Match {
     start(){
         this.status = this.statusList.STARTING
         new Audio("sounds/start.mp3").play()
-        this.siren?.pause()
+        this.stopGhostSiren()
 
         setTimeout(() => {
             this.status = this.statusList.PLAYING
             console.log("Status changed to Playing")
+
+            // start siren
+            this.playGhostSiren()
+            this.sirenIntervalId = setInterval(() => {
+                this.playGhostSiren()
+            }, 2760);
         }, 4000);
     }
 
@@ -63,5 +61,19 @@ export default class Match {
     getEntityLevel(){
         let speed_level = Math.floor((this.level-1) / 3)
         return Math.min(speed_level, 3)
+    }
+
+    // ---- SOUND EFFECTS -----------------------------------
+
+    playGhostSiren(){
+        if (!this.isStarted()) return
+        
+        this.siren = new Audio("sounds/ghosts.mp3")
+        this.siren.play()
+    }
+
+    stopGhostSiren(){
+        if (this.sirenIntervalId) clearInterval(this.sirenIntervalId)
+        this.siren?.pause()
     }
 }
