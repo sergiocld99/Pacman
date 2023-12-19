@@ -11,11 +11,11 @@ const pacmanImgs = Array(4)
 for (let i=0; i<4; i++) pacmanImgs[i] = document.getElementById(`pacman${i}`)
 
 const ghostsImg = document.getElementById("ghosts")
+const levelTxt = document.getElementById("level_txt")
+const scoreTxt = document.getElementById("score_txt")
 
 const liveImgs = Array(3)
 for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
-
-const levelTxt = document.getElementById("level_txt")
 
 // Constants
 const BOARD_WIDTH = 28
@@ -28,9 +28,9 @@ const GHOST_TICK_PERIOD = [4, 3, 2, 1]
 const LIVES_START = 2
 
 // Global variables
-const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET)
-const pacman = new Pacman(board, pacmanImgs)
 const match = new Match(LIVES_START)
+const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET, match)
+const pacman = new Pacman(board, pacmanImgs)
 
 const ghostEntities = Array(4)
 for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
@@ -106,6 +106,7 @@ const gameLoop = () => {
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')
     levelTxt.innerText = "Level " + match.level
+    scoreTxt.innerText = "Score: " + match.score
 }
 
 // Main program

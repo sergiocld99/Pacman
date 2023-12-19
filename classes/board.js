@@ -1,11 +1,12 @@
 export default class Board {
     
-    constructor(width, height, cellSize, foodRadius, wallOffset) {
+    constructor(width, height, cellSize, foodRadius, wallOffset, match) {
         this.width = width
         this.height = height
         this.cellSize = cellSize
         this.foodRadius = foodRadius
         this.delta = wallOffset
+        this.match = match
         this.wallColors = ["blue", "purple", "orange"]
 
         this.cellTypes = {
@@ -188,6 +189,7 @@ export default class Board {
             // eat food
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
+            this.match.score += 10
 
             // play sound
             const audio = new Audio(`sounds/food${this.foodCount % 2 ? 1 : 2}.mp3`)

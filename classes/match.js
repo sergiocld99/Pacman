@@ -16,6 +16,7 @@ export default class Match {
         this.level = 1
         this.lives = this.maxLives 
         this.status = this.statusList.STARTING
+        this.score = 0
     }
 
     start(){
