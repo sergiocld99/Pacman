@@ -111,7 +111,8 @@ const gameLoop = () => {
 }
 
 // Main program
-setup()
-setInterval(gameLoop, 20);
+setTimeout(() => {
+    setup()
+    setInterval(gameLoop, 20);  
+}, 1000);
 
-// ---------------- AUXILIAR FUNCTIONS ---------------------------
