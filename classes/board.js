@@ -107,7 +107,7 @@ export default class Board {
         }
     }
 
-    draw(context, level) {
+    draw(context, ticks) {
         this.matrix.forEach((row, y) => {
             row.forEach((cell, x) => {
                 if (cell) {
@@ -116,14 +116,19 @@ export default class Board {
 
                     if (cell == this.cellTypes.Food) this.drawFood(context, x, y)
                 } else {
-                    this.drawLightWall(context, x, y, level)
+                    this.drawLightWall(context, x, y, ticks)
                 }
             })
         })
     }
 
-    drawLightWall(context, x, y, level){
-        context.strokeStyle = this.wallColors[(level-1) % 3]
+    drawLightWall(context, x, y, ticks){
+        if (this.match.isLevelCompleted() && ticks % 2){
+            context.strokeStyle = "white"
+        } else {
+            context.strokeStyle = this.wallColors[(this.match.level-1) % 3]
+        }
+
         const wallType = this.cellTypes.Wall
         const wall_above = y == 0 || this.matrix[y-1][x] == wallType
         const wall_below = y == this.height-1 || this.matrix[y+1][x] == wallType
@@ -212,6 +217,18 @@ export default class Board {
 
     isTunnel(x){
         return x <= 0 || x >= this.width
+    }
+
+    getRandomSpace(current_x, current_y){
+        let candidate_x = 0
+        let candidate_y = 0
+
+        while (candidate_x < 0 || candidate_y < 0 || candidate_x >= this.width || candidate_y >= this.height || this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall){
+            candidate_x = Math.floor(Math.random() * 10) + current_x - 5
+            candidate_y = Math.floor(Math.random() * 10) + current_y - 5
+        }
+
+        return [candidate_x, candidate_y]
     }
 
 }

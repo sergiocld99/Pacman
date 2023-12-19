@@ -6,7 +6,8 @@ export default class Match {
         // enum
         this.statusList = {
             STARTING: 0,
-            PLAYING: 1
+            PLAYING: 1,
+            LEVEL_COMPLETED: 2
         }
 
         this.reset()
@@ -49,14 +50,22 @@ export default class Match {
     }
 
     nextLevel(){
-        this.level++
-        this.start()
+        this.status = this.statusList.LEVEL_COMPLETED
+
+        setTimeout(() => {
+            this.level++
+            this.start()
+        }, 2000);
     }
 
     // ---- QUERIES -----------------------------------------
 
     isStarted(){
         return this.status === this.statusList.PLAYING
+    }
+
+    isLevelCompleted(){
+        return this.status === this.statusList.LEVEL_COMPLETED
     }
 
     shouldResetGame(){

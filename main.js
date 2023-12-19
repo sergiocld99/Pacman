@@ -27,6 +27,7 @@ const WALL_OFFSET = 0.25
 const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
 const GHOST_TICK_PERIOD = [4, 3, 2, 1]
 const LIVES_START = 2
+const START_GAME_DELAY = 10
 
 // Global variables
 const match = new Match(LIVES_START)
@@ -34,10 +35,11 @@ const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_
 const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
 const ghostEntities = Array(4)
-for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
+for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i % 4, board, pacman)
 
 let ticks = 0
 let ticks_ghost = 0
+let ticks_general = 0
 
 // Setup
 const setup = () => {
@@ -64,7 +66,9 @@ const resetGame = () => {
 // Loop
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
-    board.draw(canvasContext, match.level)
+    board.draw(canvasContext, Math.floor(ticks_general / 10))
+
+    ticks_general++
 
     if (match.isStarted()){
         let entity_level = match.getEntityLevel()
@@ -114,5 +118,5 @@ const gameLoop = () => {
 setTimeout(() => {
     setup()
     setInterval(gameLoop, 20);  
-}, 1000);
+}, START_GAME_DELAY);
 
