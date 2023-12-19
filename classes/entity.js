@@ -11,6 +11,15 @@ export default class Entity {
         this.x = this.start_x
         this.y = this.start_y
         this.direction = this.start_direction
+        this.auxiliar_tick = 0
+    }
+
+    nextTick(){
+        this.auxiliar_tick++
+    }
+
+    getTick(){
+        return this.auxiliar_tick
     }
 
     fixedX(){

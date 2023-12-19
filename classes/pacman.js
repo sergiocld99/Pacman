@@ -2,9 +2,10 @@ import Entity from "./entity.js"
 
 export default class Pacman extends Entity {
 
-    constructor(board, pacmanImgs) {
+    constructor(board, pacmanImgs, pacmanClosedImg) {
         super(board, board.width / 2 - 1, board.height - 8, 2)
         this.pacmanImgs = pacmanImgs
+        this.pacmanClosedImg = pacmanClosedImg
         super.reset()
     }
 
@@ -15,7 +16,9 @@ export default class Pacman extends Entity {
         // check tunnel
         super.checkTunnel()
 
-        return this.board.canPacmanMoveTo(x_try, y_try)
+        let result = this.board.canPacmanMoveTo(x_try, y_try)
+        if (result) super.nextTick()
+        return result
     }
 
     moveUp(){
@@ -60,6 +63,7 @@ export default class Pacman extends Entity {
     }
 
     draw(context, cellSize){
-        context.drawImage(this.pacmanImgs[this.direction], this.x * cellSize, this.y * cellSize, cellSize, cellSize)
+        let img = super.getTick() % 2 ? this.pacmanClosedImg : this.pacmanImgs[this.direction]
+        context.drawImage(img, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
     }
 }

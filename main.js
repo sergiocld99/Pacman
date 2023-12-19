@@ -10,6 +10,7 @@ const canvasContext = canvas.getContext("2d")
 const pacmanImgs = Array(4)
 for (let i=0; i<4; i++) pacmanImgs[i] = document.getElementById(`pacman${i}`)
 
+const pacmanClosedImg = document.getElementById("pacman_closed")
 const ghostsImg = document.getElementById("ghosts")
 const levelTxt = document.getElementById("level_txt")
 const scoreTxt = document.getElementById("score_txt")
@@ -30,7 +31,7 @@ const LIVES_START = 2
 // Global variables
 const match = new Match(LIVES_START)
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET, match)
-const pacman = new Pacman(board, pacmanImgs)
+const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
 const ghostEntities = Array(4)
 for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i, board, pacman)
