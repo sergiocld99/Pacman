@@ -40,6 +40,14 @@ export default class Match {
         this.lives--
     }
 
+    addScore(diff){
+        let prev = this.score
+        let curr = this.score + diff
+
+        if (curr >= 10000 && prev < 10000) this.lives++
+        this.score = curr
+    }
+
     nextLevel(){
         this.level++
         this.start()

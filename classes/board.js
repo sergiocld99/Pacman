@@ -189,7 +189,7 @@ export default class Board {
             // eat food
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
-            this.match.score += 10
+            this.match.addScore(10)
 
             // play sound
             const audio = new Audio(`sounds/food${this.foodCount % 2 ? 1 : 2}.mp3`)
