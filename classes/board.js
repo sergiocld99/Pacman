@@ -41,7 +41,7 @@ export default class Board {
         this.placeColumn(9,11,9)
         this.placeColumn(12,8,4)
 
-        this.placeGhostHouse(12,13,2,1)
+        //this.placeGhostHouse(12,13,2,1)
         this.placeGhostHouse(13,11,6,3)
 
         this.placeFoodPaths()
@@ -126,7 +126,8 @@ export default class Board {
         if (this.match.isLevelCompleted() && ticks % 2){
             context.strokeStyle = "white"
         } else {
-            context.strokeStyle = this.wallColors[(this.match.level-1) % 3]
+            if (y >= 12 && x >= 10 && x <= 17 && y <= 16) context.strokeStyle = "red"
+            else context.strokeStyle = this.wallColors[(this.match.level-1) % 3]
         }
 
         const wallType = this.cellTypes.Wall
@@ -219,13 +220,13 @@ export default class Board {
         return x <= 0 || x >= this.width
     }
 
-    getRandomSpace(current_x, current_y){
+    getRandomSpace(current_x, current_y, area){
         let candidate_x = 0
         let candidate_y = 0
 
         while (candidate_x < 0 || candidate_y < 0 || candidate_x >= this.width || candidate_y >= this.height || this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall){
-            candidate_x = Math.floor(Math.random() * 10) + current_x - 5
-            candidate_y = Math.floor(Math.random() * 10) + current_y - 5
+            candidate_x = Math.round(Math.random() * area + current_x - area/2)
+            candidate_y = Math.round(Math.random() * area + current_y - area/2) 
         }
 
         return [candidate_x, candidate_y]

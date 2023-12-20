@@ -48,11 +48,15 @@ export default class Match {
         this.score = curr
     }
 
-    nextLevel(){
+    nextLevel(pacman, ghostEntities, board){
         this.status = this.statusList.LEVEL_COMPLETED
         this.stopGhostSiren()
 
         setTimeout(() => {
+            board.reset()
+            pacman.reset()
+            ghostEntities.forEach(g => g.reset())
+
             this.level++
             this.start()
         }, 2000);

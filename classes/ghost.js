@@ -3,7 +3,7 @@ import Entity from "./entity.js"
 export default class Ghost extends Entity {
 
     constructor(fullImg, number, board, pacman) {
-        super(board, number === 0 ? 13 : 11 + number + (number > 1 ? 2 : 0), 14, number % 3 ? 0 : 3)
+        super(board, 11 + number + (number > 1 ? 2 : 0), number === 0 ? 14 : 11, number % 3 ? 0 : 3)
         this.fullImg = fullImg
         this.number = number
         this.pacman = pacman
@@ -99,12 +99,12 @@ export default class Ghost extends Entity {
 
     moveAuto(){
         if (this.number === 0) {
-            super.nextTick()
-            if (super.getTick() % 50 === 0){
-                let coords = this.board.getRandomSpace(this.x, this.y)
+            //super.nextTick()
+            //if (super.getTick() % 2 === 0){
+                let coords = this.board.getRandomSpace(this.x, this.y, 2)
                 this.x = coords[0]
                 this.y = coords[1]
-            }
+            //}
             return
         }
 
