@@ -221,15 +221,16 @@ export default class Board {
     }
 
     getRandomSpace(current_x, current_y, area){
-        let candidate_x = 0
-        let candidate_y = 0
+        //let candidate_x = 0
+        //let candidate_y = 0
 
-        while (candidate_x < 0 || candidate_y < 0 || candidate_x >= this.width || candidate_y >= this.height || this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall){
-            candidate_x = Math.round(Math.random() * area + current_x - area/2)
-            candidate_y = Math.round(Math.random() * area + current_y - area/2) 
-        }
+        //while (candidate_x < 0 || candidate_y < 0 || candidate_x >= this.width || candidate_y >= this.height || this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall){
+            let candidate_x = Math.round(Math.random() * area + current_x - area/2)
+            let candidate_y = Math.round(Math.random() * area + current_y - area/2) 
+        //}
 
-        return [candidate_x, candidate_y]
+        if (this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall) return [current_x, current_y]
+        else return [candidate_x, candidate_y]
     }
 
 }

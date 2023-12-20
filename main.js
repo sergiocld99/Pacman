@@ -66,14 +66,12 @@ const resetGame = () => {
 // Loop
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
-    board.draw(canvasContext, Math.floor(ticks_general / 10))
-
-    ticks_general++
+    board.draw(canvasContext, ticks_general++)
 
     if (match.isStarted()){
         let entity_level = match.getEntityLevel()
 
-        ghostEntities[0].moveAuto()
+        ghostEntities[0].teletransport(board.foodCount)
 
         if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
             ghostEntities.forEach((g, index) => {if (index > 0) g.moveAuto()})
@@ -99,11 +97,9 @@ const gameLoop = () => {
     })
 
     if (!board.checkExistFood()){
-        board.foodCount = 9999
+        //board.foodCount = 9999
+        if (ticks_general % 2) new Audio("sounds/start.mp3").play()
         match.nextLevel(pacman, ghostEntities, board)
-        //board.reset()
-        //pacman.reset()
-        //ghostEntities.forEach(g => g.reset())
     }
 
     pacman.draw(canvasContext, CELL_SIZE)

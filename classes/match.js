@@ -2,6 +2,8 @@ export default class Match {
 
     constructor(maxLives) {
         this.maxLives = maxLives
+        this.levelCompletedAnimationDuration = 5000
+        this.initialLevel = 6
 
         // enum
         this.statusList = {
@@ -14,10 +16,10 @@ export default class Match {
     }
 
     reset(){
-        this.level = 1
+        this.level = this.initialLevel
         this.lives = this.maxLives 
         this.status = this.statusList.STARTING
-        this.score = 0
+        this.score = 2440 * (this.level - 1)
     }
 
     start(){
@@ -59,7 +61,7 @@ export default class Match {
 
             this.level++
             this.start()
-        }, 2000);
+        }, this.levelCompletedAnimationDuration);
     }
 
     // ---- QUERIES -----------------------------------------

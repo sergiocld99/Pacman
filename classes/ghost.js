@@ -97,17 +97,21 @@ export default class Ghost extends Entity {
         }
     }
 
-    moveAuto(){
-        if (this.number === 0) {
-            //super.nextTick()
-            //if (super.getTick() % 2 === 0){
+    teletransport(foodCount){
+        if (foodCount < 12) {
+            this.x = -4
+            this.y = -4
+        } else {
+            super.nextTick()
+            if (super.getTick() % 2 === 0){
                 let coords = this.board.getRandomSpace(this.x, this.y, 2)
                 this.x = coords[0]
                 this.y = coords[1]
-            //}
-            return
-        }
+            }
+        }        
+    }
 
+    moveAuto(){
         switch (this.direction) {
             case 0:
                 this.moveUp()
