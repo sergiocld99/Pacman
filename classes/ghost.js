@@ -100,7 +100,7 @@ export default class Ghost extends Entity {
     moveAuto(){
         if (this.number === 0) {
             super.nextTick()
-            if (super.getTick() % 5 === 0){
+            if (super.getTick() % 50 === 0){
                 let coords = this.board.getRandomSpace(this.x, this.y)
                 this.x = coords[0]
                 this.y = coords[1]

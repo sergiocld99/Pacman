@@ -23,7 +23,6 @@ export default class Match {
     start(){
         this.status = this.statusList.STARTING
         new Audio("sounds/start.mp3").play()
-        this.stopGhostSiren()
 
         setTimeout(() => {
             this.status = this.statusList.PLAYING
@@ -51,6 +50,7 @@ export default class Match {
 
     nextLevel(){
         this.status = this.statusList.LEVEL_COMPLETED
+        this.stopGhostSiren()
 
         setTimeout(() => {
             this.level++

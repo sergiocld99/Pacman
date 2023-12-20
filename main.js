@@ -27,7 +27,7 @@ const WALL_OFFSET = 0.25
 const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
 const GHOST_TICK_PERIOD = [4, 3, 2, 1]
 const LIVES_START = 2
-const START_GAME_DELAY = 10
+const START_GAME_DELAY = 100
 
 // Global variables
 const match = new Match(LIVES_START)
