@@ -27,10 +27,12 @@ const WALL_OFFSET = 0.25
 const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
 const GHOST_TICK_PERIOD = [4, 3, 2, 1]
 const LIVES_START = 2
-const START_GAME_DELAY = 100
+const LEVEL_START = 1
+const LEVEL_COMPLETED_DELAY = 2000
+const START_GAME_DELAY = 400
 
 // Global variables
-const match = new Match(LIVES_START)
+const match = new Match(LIVES_START, LEVEL_START, LEVEL_COMPLETED_DELAY)
 const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_OFFSET, match)
 const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
@@ -68,15 +70,13 @@ const resetGame = () => {
 // Loop
 const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
-    board.draw(canvasContext, ticks_general++)
+    board.draw(canvasContext, Math.floor(ticks_general++ / 10))
 
     if (match.isStarted()){
         let entity_level = match.getEntityLevel()
 
-        ghostEntities[0].teletransport(board.foodCount)
-
         if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
-            ghostEntities.forEach((g, index) => {if (index > 0) g.moveAuto()})
+            ghostEntities.forEach((g) => {g.moveAuto()})
             ticks_ghost = 0
         }
 
@@ -99,18 +99,8 @@ const gameLoop = () => {
     })
 
     if (!board.checkExistFood()){
-        //board.foodCount = 9999
-        if (ticks_general % 2) new Audio("sounds/start.mp3").play()
-        match.nextLevel(pacman, ghostEntities, board)
-
-        if (ticks_general % 3 === 0){
-            ghostEntities[0].x = pacman.x - 1.4
-            ghostEntities[0].y = pacman.y
-        } else {
-            ghostEntities[0].x = -4
-            ghostEntities[0].y = -4
-        }
-        
+        board.foodCount = 9999
+        match.nextLevel(pacman, ghostEntities, board)        
     }
 
     pacman.draw(canvasContext, CELL_SIZE)

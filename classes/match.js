@@ -1,9 +1,9 @@
 export default class Match {
 
-    constructor(maxLives) {
+    constructor(maxLives, initialLevel, levelCompletedDelay) {
         this.maxLives = maxLives
-        this.levelCompletedAnimationDuration = 5000
-        this.initialLevel = 6
+        this.levelCompletedAnimationDuration = levelCompletedDelay
+        this.initialLevel = initialLevel
  
         // enum
         this.statusList = {

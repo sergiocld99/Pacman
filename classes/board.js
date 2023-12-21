@@ -41,7 +41,7 @@ export default class Board {
         this.placeColumn(9,11,9)
         this.placeColumn(12,8,4)
 
-        //this.placeGhostHouse(12,13,2,1)
+        this.placeGhostHouse(12,13,2,1)
         this.placeGhostHouse(13,11,6,3)
 
         this.placeFoodPaths()

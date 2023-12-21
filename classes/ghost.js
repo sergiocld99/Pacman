@@ -3,7 +3,7 @@ import Entity from "./entity.js"
 export default class Ghost extends Entity {
 
     constructor(fullImg, number, board, pacman) {
-        super(board, 11 + number + (number > 1 ? 2 : 0), number === 0 ? 14 : 11, number % 3 ? 0 : 3)
+        super(board, 11 + number + (number > 1 ? 2 : 0), 14, number % 3 ? 0 : 3)
         this.fullImg = fullImg
         this.number = number
         this.pacman = pacman
