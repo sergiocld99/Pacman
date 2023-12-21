@@ -29,7 +29,6 @@ export default class Board {
         }))
 
         this.foodCount = count
-        console.log("Food count: ", this.foodCount)
     }
 
     placePaths() {
@@ -111,6 +110,12 @@ export default class Board {
         this.matrix[row][col] = item
         this.matrix[row][this.width-col-1] = item
     }
+
+    setGhosts(ghosts){
+        this.ghosts = ghosts
+    }
+    
+    // -----------------------------
 
     draw(context, ticks) {
         this.matrix.forEach((row, y) => {
@@ -205,7 +210,7 @@ export default class Board {
         const value = this.matrix[y][x]
         const ok = value != this.cellTypes.Wall && value != this.cellTypes.GhostHouse
     
-        if (value == this.cellTypes.Food){
+        if (value === this.cellTypes.Food){
             // eat food
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
@@ -214,6 +219,17 @@ export default class Board {
             // play sound
             const audio = new Audio(`sounds/food${this.foodCount % 2 ? 1 : 2}.mp3`)
             audio.play()
+        } else if (value === this.cellTypes.BigFood){
+            this.matrix[y][x] = this.cellTypes.Space
+
+            this.ghosts.forEach(g => {
+                console.log("Asustando fantasma: ", g)
+                g.scare()
+
+                setTimeout(() => {
+                    g.scared = false
+                }, 10000);
+            })
         }
 
         return ok

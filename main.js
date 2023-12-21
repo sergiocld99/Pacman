@@ -14,6 +14,7 @@ const pacmanClosedImg = document.getElementById("pacman_closed")
 const ghostsImg = document.getElementById("ghosts")
 const levelTxt = document.getElementById("level_txt")
 const scoreTxt = document.getElementById("score_txt")
+const scaredImg = document.getElementById("scared")
 
 const liveImgs = Array(3)
 for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
@@ -22,6 +23,7 @@ for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
 const BOARD_WIDTH = 28
 const BOARD_HEIGHT = 31
 const CELL_SIZE = 20
+const GHOST_IMAGE_SIZE = 100
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
 const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
@@ -37,12 +39,13 @@ const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_
 const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
 const ghostEntities = Array(4)
-for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i % 4, board, pacman)
+for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, scaredImg, i % 4, board, pacman)
+
+board.setGhosts(ghostEntities)
 
 let ticks = 0
 let ticks_ghost = 0
 let ticks_general = 0
-let win = false
 
 // Setup
 const setup = () => {
@@ -88,12 +91,18 @@ const gameLoop = () => {
 
     ghostEntities.forEach(g => {
         if (g.checkPacmanCollision()){
-            match.loseLive()
-            if (match.shouldResetGame()) resetGame()
-            else {
-                pacman.reset()
-                ghostEntities.forEach(g => g.reset())
+            if (g.scared){
+                g.reset()
+                g.scared = false
+            } else {
+                match.loseLive()
+                if (match.shouldResetGame()) resetGame()
+                else {
+                    pacman.reset()
+                    ghostEntities.forEach(g => g.reset())
+                }
             }
+
             return
         }
     })
@@ -106,7 +115,7 @@ const gameLoop = () => {
     pacman.draw(canvasContext, CELL_SIZE)
 
     ghostEntities.forEach(g => {
-        g.draw(canvasContext, CELL_SIZE)
+        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE)
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')

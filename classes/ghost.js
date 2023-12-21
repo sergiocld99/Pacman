@@ -2,9 +2,10 @@ import Entity from "./entity.js"
 
 export default class Ghost extends Entity {
 
-    constructor(fullImg, number, board, pacman) {
+    constructor(fullImg, scareImg, number, board, pacman) {
         super(board, 11 + number + (number > 1 ? 2 : 0), 14, number % 3 ? 0 : 3)
         this.fullImg = fullImg
+        this.scareImg = scareImg
         this.number = number
         this.pacman = pacman
         this.reset()
@@ -15,6 +16,7 @@ export default class Ghost extends Entity {
         this.bounces = 0
         this.bounceLimit = 5 * (this.number + 1)
         this.inHouse = true
+        this.scared = false
     }
 
     canMoveTo(x,y){
@@ -128,8 +130,11 @@ export default class Ghost extends Entity {
         }
     }
 
-    checkPacmanCollision(){
-        
+    scare(){
+        this.scared = true
+    }
+
+    checkPacmanCollision(){    
         switch (this.direction) {
             case 0:
             case 3:
@@ -143,8 +148,8 @@ export default class Ghost extends Entity {
 
     }
 
-    draw(context, cellSize){
-        const sw = 100, sh = 100
+    draw(context, cellSize, imageSize){
+        const sw = imageSize, sh = imageSize
         let sx, sy
 
         switch (this.number) {
@@ -166,6 +171,12 @@ export default class Ghost extends Entity {
                 break;
         }
 
-        context.drawImage(this.fullImg, sx, sy, sw, sh, this.x * cellSize, this.y * cellSize, cellSize * 1.2, cellSize * 1.2)
+        if (this.scared) {
+            context.drawImage(this.scareImg, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
+        } else {
+            context.drawImage(this.fullImg, sx, sy, sw, sh, this.x * cellSize, this.y * cellSize, cellSize * 1.2, cellSize * 1.2)
+        }
+
+        
     }
 }
