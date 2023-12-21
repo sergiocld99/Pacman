@@ -40,6 +40,7 @@ for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, i % 4, board, pa
 let ticks = 0
 let ticks_ghost = 0
 let ticks_general = 0
+let win = false
 
 // Setup
 const setup = () => {
@@ -47,10 +48,10 @@ const setup = () => {
     
     // Keyboard listener
     document.addEventListener("keydown", e => {
-        if (e.key === "ArrowUp" && pacman.direction != 0) pacman.moveUp()
-        else if (e.key === "ArrowDown" && pacman.direction != 3) pacman.moveDown()
-        else if (e.key === "ArrowLeft" && pacman.direction != 1) pacman.moveLeft()
-        else if (e.key === "ArrowRight" && pacman.direction != 2) pacman.moveRight()
+        if ((e.key === "w" || e.key === "ArrowUp") && pacman.direction != 0) pacman.moveUp()
+        else if ((e.key === "s" || e.key === "ArrowDown") && pacman.direction != 3) pacman.moveDown()
+        else if ((e.key === "a" || e.key === "ArrowLeft") && pacman.direction != 1) pacman.moveLeft()
+        else if ((e.key === "d" || e.key === "ArrowRight") && pacman.direction != 2) pacman.moveRight()
     })
 }
 
@@ -60,6 +61,7 @@ const resetGame = () => {
     match.reset()
     ghostEntities.forEach(g => g.reset())
 
+    match.stopGhostSiren()
     match.start()
 }
 
@@ -100,6 +102,15 @@ const gameLoop = () => {
         //board.foodCount = 9999
         if (ticks_general % 2) new Audio("sounds/start.mp3").play()
         match.nextLevel(pacman, ghostEntities, board)
+
+        if (ticks_general % 3 === 0){
+            ghostEntities[0].x = pacman.x - 1.4
+            ghostEntities[0].y = pacman.y
+        } else {
+            ghostEntities[0].x = -4
+            ghostEntities[0].y = -4
+        }
+        
     }
 
     pacman.draw(canvasContext, CELL_SIZE)

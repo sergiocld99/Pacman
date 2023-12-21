@@ -4,7 +4,7 @@ export default class Match {
         this.maxLives = maxLives
         this.levelCompletedAnimationDuration = 5000
         this.initialLevel = 6
-
+ 
         // enum
         this.statusList = {
             STARTING: 0,
