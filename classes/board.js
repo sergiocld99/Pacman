@@ -45,6 +45,10 @@ export default class Board {
         this.placeGhostHouse(13,11,6,3)
 
         this.placeFoodPaths()
+
+        // place 4 big foods
+        this.placeItemMirrored(3, 1, this.cellTypes.BigFood)
+        this.placeItemMirrored(this.height-8, 1, this.cellTypes.BigFood)
     }
 
     placeFoodPaths() {
@@ -73,29 +77,25 @@ export default class Board {
 
     placeRow(row, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[row][start+i] = this.cellTypes.Space
-            this.matrix[row][this.width-start-i-1] = this.cellTypes.Space
+            this.placeItemMirrored(row, start+i, this.cellTypes.Space)
         }
     }
 
     placeColumn(col, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[start+i][col] = this.cellTypes.Space
-            this.matrix[start+i][this.width-col-1] = this.cellTypes.Space
+            this.placeItemMirrored(start+i, col, this.cellTypes.Space)
         }
     }
 
     placeFoodRow(row, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[row][start+i] = this.cellTypes.Food
-            this.matrix[row][this.width-start-i-1] = this.cellTypes.Food
+            this.placeItemMirrored(row, start+i, this.cellTypes.Food)
         }
     }
 
     placeFoodColumn(col, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[start+i][col] = this.cellTypes.Food
-            this.matrix[start+i][this.width-col-1] = this.cellTypes.Food
+            this.placeItemMirrored(start+i, col, this.cellTypes.Food)
         }
     }
 
@@ -107,6 +107,11 @@ export default class Board {
         }
     }
 
+    placeItemMirrored(row, col, item){
+        this.matrix[row][col] = item
+        this.matrix[row][this.width-col-1] = item
+    }
+
     draw(context, ticks) {
         this.matrix.forEach((row, y) => {
             row.forEach((cell, x) => {
@@ -114,7 +119,8 @@ export default class Board {
                     context.fillStyle = cell == this.cellTypes.GhostHouse ? "#110" : "black"
                     context.fillRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize)
 
-                    if (cell == this.cellTypes.Food) this.drawFood(context, x, y)
+                    if (cell === this.cellTypes.Food) this.drawFood(context, x, y)
+                    else if (cell === this.cellTypes.BigFood) this.drawBigFood(context, x, y, ticks)
                 } else {
                     this.drawLightWall(context, x, y, ticks)
                 }
@@ -179,9 +185,17 @@ export default class Board {
     }
 
     drawFood(context, x, y){
+        this.drawCircle(context, x, y, this.foodRadius)
+    }
+
+    drawBigFood(context, x, y, ticks){
+        if (ticks % 2) this.drawCircle(context, x, y, this.foodRadius * 2)
+    }
+
+    drawCircle(context, x, y, radius){
         context.fillStyle = "white"
         context.beginPath()
-        context.arc((x+0.5) * this.cellSize, (y+0.5) * this.cellSize, this.foodRadius, 0, 2 * Math.PI)
+        context.arc((x+0.5) * this.cellSize, (y+0.5) * this.cellSize, radius, 0, 2 * Math.PI)
         context.fill()
     }
 
