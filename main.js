@@ -93,6 +93,7 @@ const gameLoop = () => {
         if (g.checkPacmanCollision()){
             if (g.canBeEaten()){
                 g.eat()
+                match.addPointsByGhostEat()
             } else {
                 match.loseLive()
                 if (match.shouldResetGame()) resetGame()

@@ -86,13 +86,18 @@ export default class Match {
         return 9300 * (factor / 12)
     }
 
+    addPointsByGhostEat(){
+        this.ghostsEaten++
+        this.score += Math.pow(2, this.ghostsEaten) * 100
+    }
+
     // ---- SOUND EFFECTS -----------------------------------
 
     startGhostSiren(){
         // start siren
         this.playGhostSiren()
         if (this.sirenIntervalId) clearInterval(this.sirenIntervalId)
-        this.sirenIntervalId = setInterval(() => this.playGhostSiren(), 2760);
+        this.sirenIntervalId = setInterval(() => this.playGhostSiren(), 2760)
     }
 
     playGhostSiren(){
@@ -109,6 +114,7 @@ export default class Match {
 
     startScareSiren(duration){
         this.stopGhostSiren()
+        this.ghostsEaten = 0
 
         // start siren
         this.playScareSiren()
