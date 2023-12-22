@@ -27,8 +27,8 @@ const CELL_SIZE = 20
 const GHOST_IMAGE_SIZE = 100
 const FOOD_RADIUS = CELL_SIZE / 6
 const WALL_OFFSET = 0.25
-const PACMAN_TICK_PERIOD = [4, 3, 2, 1]
-const GHOST_TICK_PERIOD = [4, 3, 2, 1]
+const PACMAN_TICK_PERIOD = [3, 3, 2, 2]
+const GHOST_TICK_PERIOD = [3, 3, 2, 2]
 const LIVES_START = 2
 const LEVEL_START = 1
 const LEVEL_COMPLETED_DELAY = 2000
@@ -88,6 +88,10 @@ const gameLoop = () => {
             pacman.moveAuto()
             ticks = 0
         }
+    } else if (match.status === match.statusList.EATING_GHOST){
+        canvasContext.font = "16px Arial"
+        canvasContext.fillStyle = "cyan"
+        canvasContext.fillText(`${match.getPointsByGhostEaten()}`, (pacman.x - 0.2) * CELL_SIZE, (pacman.y - 0.6) * CELL_SIZE)
     }
 
     ghostEntities.forEach(g => {

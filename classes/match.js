@@ -88,9 +88,13 @@ export default class Match {
         return 9300 * (factor / 12)
     }
 
+    getPointsByGhostEaten(){
+        return Math.pow(2, this.ghostsEaten) * 100
+    }
+
     addPointsByGhostEat(){
         this.ghostsEaten++
-        this.score += Math.pow(2, this.ghostsEaten) * 100
+        this.addScore(this.getPointsByGhostEaten())
 
         this.status = this.statusList.EATING_GHOST
         setTimeout(() => this.status = this.statusList.PLAYING, 500)
