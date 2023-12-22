@@ -15,7 +15,7 @@ export default class Entity {
     }
 
     nextTick(){
-        this.auxiliar_tick++
+        if (this.auxiliar_tick++ > 99) this.auxiliar_tick = 0
     }
 
     getTick(){

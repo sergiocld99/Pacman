@@ -15,6 +15,7 @@ const ghostsImg = document.getElementById("ghosts")
 const levelTxt = document.getElementById("level_txt")
 const scoreTxt = document.getElementById("score_txt")
 const scaredImg = document.getElementById("scared")
+const scared2Img = document.getElementById("scared2")
 
 const liveImgs = Array(3)
 for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
@@ -39,7 +40,7 @@ const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_
 const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
 const ghostEntities = Array(4)
-for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, scaredImg, i % 4, board, pacman)
+for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, scaredImg, scared2Img, i % 4, board, pacman)
 
 board.setGhosts(ghostEntities)
 

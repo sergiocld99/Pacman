@@ -2,10 +2,11 @@ import Entity from "./entity.js"
 
 export default class Ghost extends Entity {
 
-    constructor(fullImg, scareImg, number, board, pacman) {
+    constructor(fullImg, scareImg, scare2Img, number, board, pacman) {
         super(board, 11 + number + (number > 1 ? 2 : 0), 14, number % 3 ? 0 : 3)
         this.fullImg = fullImg
         this.scareImg = scareImg
+        this.scare2Img = scare2Img
         this.number = number
         this.pacman = pacman
         this.reset()
@@ -195,7 +196,12 @@ export default class Ghost extends Entity {
 
     scare(duration){
         this.scared = true
+        this.vulnerableEnding = false
         this.goAwayFromPacman()
+
+        setTimeout(() => {
+            this.vulnerableEnding = true
+        }, duration * 0.8)
 
         setTimeout(() => {
             this.scared = false
@@ -245,7 +251,9 @@ export default class Ghost extends Entity {
         }
 
         if (this.scared) {
-            context.drawImage(this.scareImg, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
+            super.nextTick()
+            let variant = this.vulnerableEnding && (super.getTick() % 10 < 5)
+            context.drawImage(variant ? this.scare2Img : this.scareImg, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
         } else {
             context.drawImage(this.fullImg, sx, sy, sw, sh, this.x * cellSize, this.y * cellSize, cellSize * 1.2, cellSize * 1.2)
         }
