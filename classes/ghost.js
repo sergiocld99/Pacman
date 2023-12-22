@@ -147,12 +147,47 @@ export default class Ghost extends Entity {
         }
     }
 
+    goAwayFromPacman(){
+        switch (this.direction){
+            case 0:
+                if (this.pacman.y < this.y) this.direction = 3
+                break
+            case 1:
+                if (this.pacman.x < this.x) this.direction = 2
+                break
+            case 2:
+                if (this.pacman.x > this.x) this.direction = 1
+                break
+            case 3:
+                if (this.pacman.y > this.y) this.direction = 0
+                break
+        }
+    }
+
+    goTowardsPacman(){
+        switch (this.direction){
+            case 0:
+                if (this.pacman.y > this.y) this.direction = 3
+                break
+            case 1:
+                if (this.pacman.x > this.x) this.direction = 2
+                break
+            case 2:
+                if (this.pacman.x < this.x) this.direction = 1
+                break
+            case 3:
+                if (this.pacman.y < this.y) this.direction = 0
+                break
+        }
+    }
+
     scare(duration){
         this.scared = true
-        this.goBackwards()
+        this.goAwayFromPacman()
 
         setTimeout(() => {
             this.scared = false
+            this.goTowardsPacman()
         }, duration);
     }
 
