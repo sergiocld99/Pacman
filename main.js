@@ -91,9 +91,8 @@ const gameLoop = () => {
 
     ghostEntities.forEach(g => {
         if (g.checkPacmanCollision()){
-            if (g.scared){
-                g.reset()
-                g.scared = false
+            if (g.canBeEaten()){
+                g.eat()
             } else {
                 match.loseLive()
                 if (match.shouldResetGame()) resetGame()

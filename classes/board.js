@@ -25,7 +25,7 @@ export default class Board {
         let count = 0
 
         this.matrix.forEach(row => row.forEach(val => {
-            if (val == this.cellTypes.Food) count++
+            if (val === this.cellTypes.Food || val === this.cellTypes.BigFood) count++
         }))
 
         this.foodCount = count
@@ -221,15 +221,9 @@ export default class Board {
             audio.play()
         } else if (value === this.cellTypes.BigFood){
             this.matrix[y][x] = this.cellTypes.Space
-
-            this.ghosts.forEach(g => {
-                console.log("Asustando fantasma: ", g)
-                g.scare()
-
-                setTimeout(() => {
-                    g.scared = false
-                }, 10000);
-            })
+            this.foodCount -= 1
+            this.ghosts.forEach(g => g.scare(9300))
+            this.match.startScareSiren(9300)
         }
 
         return ok
@@ -251,13 +245,8 @@ export default class Board {
     }
 
     getRandomSpace(current_x, current_y, area){
-        //let candidate_x = 0
-        //let candidate_y = 0
-
-        //while (candidate_x < 0 || candidate_y < 0 || candidate_x >= this.width || candidate_y >= this.height || this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall){
-            let candidate_x = Math.round(Math.random() * area + current_x - area/2)
-            let candidate_y = Math.round(Math.random() * area + current_y - area/2) 
-        //}
+        let candidate_x = Math.round(Math.random() * area + current_x - area/2)
+        let candidate_y = Math.round(Math.random() * area + current_y - area/2) 
 
         if (this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall) return [current_x, current_y]
         else return [candidate_x, candidate_y]

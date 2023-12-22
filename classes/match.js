@@ -28,13 +28,7 @@ export default class Match {
 
         setTimeout(() => {
             this.status = this.statusList.PLAYING
-            console.log("Status changed to Playing")
-
-            // start siren
-            this.playGhostSiren()
-            this.sirenIntervalId = setInterval(() => {
-                this.playGhostSiren()
-            }, 2760);
+            this.startGhostSiren()
         }, 4000);
     }
 
@@ -89,6 +83,13 @@ export default class Match {
 
     // ---- SOUND EFFECTS -----------------------------------
 
+    startGhostSiren(){
+        // start siren
+        this.playGhostSiren()
+        if (this.sirenIntervalId) clearInterval(this.sirenIntervalId)
+        this.sirenIntervalId = setInterval(() => this.playGhostSiren(), 2760);
+    }
+
     playGhostSiren(){
         if (!this.isStarted()) return
         
@@ -99,5 +100,23 @@ export default class Match {
     stopGhostSiren(){
         if (this.sirenIntervalId) clearInterval(this.sirenIntervalId)
         this.siren?.pause()
+    }
+
+    startScareSiren(duration){
+        this.stopGhostSiren()
+
+        // start siren
+        this.playScareSiren()
+        this.sirenIntervalId = setInterval(() => this.playScareSiren(), 3190);
+
+        setTimeout(() => {
+            this.stopGhostSiren()
+            this.startGhostSiren()
+        }, duration)
+    }
+
+    playScareSiren(){
+        this.siren = new Audio("sounds/scared_x6.mp3")
+        this.siren.play()
     }
 }

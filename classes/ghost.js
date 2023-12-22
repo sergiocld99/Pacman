@@ -130,8 +130,34 @@ export default class Ghost extends Entity {
         }
     }
 
-    scare(){
+    goBackwards(){
+        switch (this.direction){
+            case 0:
+                this.direction = 3
+                break
+            case 1:
+                this.direction = 2
+                break
+            case 2:
+                this.direction = 1
+                break
+            case 3:
+                this.direction = 0
+                break
+        }
+    }
+
+    scare(duration){
         this.scared = true
+        this.goBackwards()
+
+        setTimeout(() => {
+            this.scared = false
+        }, duration);
+    }
+
+    eat(){
+        this.reset()
     }
 
     checkPacmanCollision(){    
@@ -178,5 +204,11 @@ export default class Ghost extends Entity {
         }
 
         
+    }
+
+    // ---- QUERIES -----------------------
+    
+    canBeEaten(){
+        return this.scared
     }
 }
