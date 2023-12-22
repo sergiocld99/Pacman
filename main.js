@@ -95,6 +95,7 @@ const gameLoop = () => {
             if (g.canBeEaten()){
                 g.eat()
                 match.addPointsByGhostEat()
+                new Audio("sounds/eat_ghost.mp3").play()
             } else {
                 match.loseLive()
                 if (match.shouldResetGame()) resetGame()
