@@ -9,7 +9,8 @@ export default class Match {
         this.statusList = {
             STARTING: 0,
             PLAYING: 1,
-            LEVEL_COMPLETED: 2
+            LEVEL_COMPLETED: 2,
+            EATING_GHOST: 3
         }
 
         this.reset()
@@ -90,6 +91,9 @@ export default class Match {
     addPointsByGhostEat(){
         this.ghostsEaten++
         this.score += Math.pow(2, this.ghostsEaten) * 100
+
+        this.status = this.statusList.EATING_GHOST
+        setTimeout(() => this.status = this.statusList.PLAYING, 500)
     }
 
     // ---- SOUND EFFECTS -----------------------------------

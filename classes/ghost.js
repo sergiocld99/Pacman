@@ -216,6 +216,7 @@ export default class Ghost extends Entity {
 
     eat(){
         this.reset()
+        this.bounces = 99
     }
 
     checkPacmanCollision(){    
