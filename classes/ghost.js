@@ -53,8 +53,14 @@ export default class Ghost extends Entity {
     }
 
     moveUp(){
-        if (this.y == 14 && this.x == 6){
-            this.changeToRandomDirection()
+        if (this.y == 14 && (this.x == 6 || this.x == 21)){
+            if (this.scared){
+                if (this.pacman.isAbove(this.y)) this.changeToRandomDirection()
+                else super.moveUp()
+            } else {
+                if (this.pacman.isBelow(this.y)) this.changeToRandomDirection()
+                else super.moveUp()
+            }
         } else if (this.canMoveTo(this.x, this.y-0.5)){
             super.moveUp()
         } else {
@@ -89,8 +95,14 @@ export default class Ghost extends Entity {
     }
 
     moveDown(){
-        if (this.y == 14 && this.x == 21){
-            this.changeToRandomDirection()
+        if (this.y == 14 && (this.x == 6 || this.x == 21)){
+            if (this.scared){
+                if (this.pacman.isBelow(this.y)) this.changeToRandomDirection()
+                else super.moveDown()
+            } else {
+                if (this.pacman.isAbove(this.y)) this.changeToRandomDirection()
+                else super.moveDown()
+            }
         } else if (this.canMoveTo(this.x, this.y+0.5)){
             super.moveDown()
         } else {
@@ -150,16 +162,16 @@ export default class Ghost extends Entity {
     goAwayFromPacman(){
         switch (this.direction){
             case 0:
-                if (this.pacman.y < this.y) this.direction = 3
+                if (this.pacman.isAbove(this.y)) this.direction = 3
                 break
             case 1:
-                if (this.pacman.x < this.x) this.direction = 2
+                if (this.pacman.isToTheLeft(this.x)) this.direction = 2
                 break
             case 2:
-                if (this.pacman.x > this.x) this.direction = 1
+                if (this.pacman.isToTheRight(this.x)) this.direction = 1
                 break
             case 3:
-                if (this.pacman.y > this.y) this.direction = 0
+                if (this.pacman.isBelow(this.y)) this.direction = 0
                 break
         }
     }
@@ -167,16 +179,16 @@ export default class Ghost extends Entity {
     goTowardsPacman(){
         switch (this.direction){
             case 0:
-                if (this.pacman.y > this.y) this.direction = 3
+                if (this.pacman.isBelow(this.y)) this.direction = 3
                 break
             case 1:
-                if (this.pacman.x > this.x) this.direction = 2
+                if (this.pacman.isToTheRight(this.x)) this.direction = 2
                 break
             case 2:
-                if (this.pacman.x < this.x) this.direction = 1
+                if (this.pacman.isToTheLeft(this.x)) this.direction = 1
                 break
             case 3:
-                if (this.pacman.y < this.y) this.direction = 0
+                if (this.pacman.isAbove(this.y)) this.direction = 0
                 break
         }
     }

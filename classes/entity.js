@@ -78,4 +78,20 @@ export default class Entity {
         if (this.x >= this.board.width-1) this.x = 0
         else if (this.x <= 0) this.x = this.board.width-1
     }
+
+    isBelow(y){
+        return this.y > y
+    }
+
+    isAbove(y){
+        return this.y < y
+    }
+
+    isToTheLeft(x){
+        return this.x < x
+    }
+
+    isToTheRight(x){
+        return this.x > x
+    }
 }
