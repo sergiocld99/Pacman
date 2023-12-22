@@ -47,6 +47,7 @@ export default class Match {
     nextLevel(pacman, ghostEntities, board){
         this.status = this.statusList.LEVEL_COMPLETED
         this.stopGhostSiren()
+        this.areGhostsVulnerable = false
 
         setTimeout(() => {
             board.reset()
@@ -115,6 +116,7 @@ export default class Match {
     startScareSiren(duration){
         this.stopGhostSiren()
         this.ghostsEaten = 0
+        this.areGhostsVulnerable = true
 
         // start siren
         this.playScareSiren()
@@ -122,6 +124,7 @@ export default class Match {
 
         setTimeout(() => {
             this.stopGhostSiren()
+            this.areGhostsVulnerable = false
             this.startGhostSiren()
         }, duration)
     }

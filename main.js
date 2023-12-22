@@ -79,7 +79,7 @@ const gameLoop = () => {
     if (match.isStarted()){
         let entity_level = match.getEntityLevel()
 
-        if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level]){
+        if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level] + (match.areGhostsVulnerable ? 1 : 0)){
             ghostEntities.forEach((g) => {g.moveAuto()})
             ticks_ghost = 0
         }
