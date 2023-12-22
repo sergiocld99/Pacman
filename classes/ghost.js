@@ -18,6 +18,9 @@ export default class Ghost extends Entity {
         this.bounceLimit = 5 * (this.number + 1)
         this.inHouse = true
         this.scared = false
+
+        if (this.vulnerableEndingIntervalId) clearInterval(this.vulnerableEndingIntervalId)
+        if (this.vulnerableIntervalId) clearInterval(this.vulnerableIntervalId)
     }
 
     canMoveTo(x,y){
