@@ -222,8 +222,9 @@ export default class Board {
         } else if (value === this.cellTypes.BigFood){
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
-            this.ghosts.forEach(g => g.scare(9300))
-            this.match.startScareSiren(9300)
+            let scare_duration = this.match.getScareDuration()
+            this.ghosts.forEach(g => g.scare(scare_duration))
+            this.match.startScareSiren(scare_duration)
         }
 
         return ok

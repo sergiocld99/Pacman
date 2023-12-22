@@ -81,6 +81,11 @@ export default class Match {
         return Math.min(speed_level, 3)
     }
 
+    getScareDuration(){
+        let factor = Math.max(1, 12 - this.level + 1)
+        return 9300 * (factor / 12)
+    }
+
     // ---- SOUND EFFECTS -----------------------------------
 
     startGhostSiren(){
