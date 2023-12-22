@@ -199,11 +199,13 @@ export default class Ghost extends Entity {
         this.vulnerableEnding = false
         this.goAwayFromPacman()
 
-        setTimeout(() => {
+        if (this.vulnerableEndingIntervalId) clearInterval(this.vulnerableEndingIntervalId)
+        this.vulnerableEndingIntervalId = setTimeout(() => {
             this.vulnerableEnding = true
         }, duration * 0.8)
 
-        setTimeout(() => {
+        if (this.vulnerableIntervalId) clearInterval(this.vulnerableIntervalId)
+        this.vulnerableIntervalId = setTimeout(() => {
             this.scared = false
             this.goTowardsPacman()
         }, duration);

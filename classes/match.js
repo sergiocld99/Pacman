@@ -122,7 +122,10 @@ export default class Match {
         this.playScareSiren()
         this.sirenIntervalId = setInterval(() => this.playScareSiren(), 3190);
 
-        setTimeout(() => {
+        // set duration
+        if (this.vulnerableIntervalId) clearInterval(this.vulnerableIntervalId)
+
+        this.vulnerableIntervalId = setTimeout(() => {
             this.stopGhostSiren()
             this.areGhostsVulnerable = false
             this.startGhostSiren()
