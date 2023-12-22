@@ -201,6 +201,7 @@ export default class Ghost extends Entity {
         this.scared = true
         this.vulnerableEnding = false
         this.goAwayFromPacman()
+        super.resetTicks()
 
         if (this.vulnerableEndingIntervalId) clearInterval(this.vulnerableEndingIntervalId)
         this.vulnerableEndingIntervalId = setTimeout(() => {
@@ -233,34 +234,34 @@ export default class Ghost extends Entity {
 
     }
 
-    draw(context, cellSize, imageSize){
-        const sw = imageSize, sh = imageSize
-        let sx, sy
-
-        switch (this.number) {
-            case 0:
-                sx = 0
-                sy = 0
-                break;
-            case 1:
-                sx = 100
-                sy = 0
-                break
-            case 2:
-                sx = 0
-                sy = 100
-                break
-            case 3:
-                sx = 100
-                sy = 100
-                break;
-        }
-
+    draw(context, cellSize, imageSize, increaseTicks){
         if (this.scared) {
-            super.nextTick()
-            let variant = this.vulnerableEnding && (super.getTick() % 10 < 5)
+            if (increaseTicks) super.nextTick()
+            let variant = this.vulnerableEnding && (super.getTick() % 10 > 5)
             context.drawImage(variant ? this.scare2Img : this.scareImg, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
         } else {
+            const sw = imageSize, sh = imageSize
+            let sx, sy
+
+            switch (this.number) {
+                case 0:
+                    sx = 0
+                    sy = 0
+                    break;
+                case 1:
+                    sx = 100
+                    sy = 0
+                    break
+                case 2:
+                    sx = 0
+                    sy = 100
+                    break
+                case 3:
+                    sx = 100
+                    sy = 100
+                    break;
+            }
+
             context.drawImage(this.fullImg, sx, sy, sw, sh, this.x * cellSize, this.y * cellSize, cellSize * 1.2, cellSize * 1.2)
         }
 

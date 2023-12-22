@@ -11,6 +11,10 @@ export default class Entity {
         this.x = this.start_x
         this.y = this.start_y
         this.direction = this.start_direction
+        this.resetTicks()
+    }
+
+    resetTicks(){
         this.auxiliar_tick = 0
     }
 

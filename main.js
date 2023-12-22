@@ -121,7 +121,7 @@ const gameLoop = () => {
     pacman.draw(canvasContext, CELL_SIZE)
 
     ghostEntities.forEach(g => {
-        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE)
+        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isStarted())
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')

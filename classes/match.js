@@ -122,9 +122,10 @@ export default class Match {
     }
 
     startScareSiren(duration){
+        this.ghostsEaten = 0
+
         if (!this.areGhostsVulnerable){
             this.stopGhostSiren()
-            this.ghostsEaten = 0
             this.areGhostsVulnerable = true
 
             // start siren
