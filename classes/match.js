@@ -114,14 +114,16 @@ export default class Match {
     }
 
     startScareSiren(duration){
-        this.stopGhostSiren()
-        this.ghostsEaten = 0
-        this.areGhostsVulnerable = true
+        if (!this.areGhostsVulnerable){
+            this.stopGhostSiren()
+            this.ghostsEaten = 0
+            this.areGhostsVulnerable = true
 
-        // start siren
-        this.playScareSiren()
-        this.sirenIntervalId = setInterval(() => this.playScareSiren(), 3190);
-
+            // start siren
+            this.playScareSiren()
+            this.sirenIntervalId = setInterval(() => this.playScareSiren(), 3190);
+        }
+        
         // set duration
         if (this.vulnerableIntervalId) clearInterval(this.vulnerableIntervalId)
 
