@@ -10,7 +10,8 @@ export default class Match {
             STARTING: 0,
             PLAYING: 1,
             LEVEL_COMPLETED: 2,
-            EATING_GHOST: 3
+            EATING_GHOST: 3,
+            LOSING: 4
         }
 
         this.reset()
@@ -33,8 +34,28 @@ export default class Match {
         }, 4000);
     }
 
-    loseLive(){
-        this.lives--
+    loseLive(pacman){
+        this.status = this.statusList.LOSING
+        this.stopGhostSiren()
+
+        let sound = new Audio("sounds/lose.mp3")
+        sound.volume = 0.5
+        sound.play()
+
+        // lose animation
+        pacman.resetTicks()
+        let rotateIntervalId = setInterval(() => pacman.rotateClockwise(), 200);
+        setTimeout(() => clearInterval(rotateIntervalId), 1700)
+        
+        if (this.lives > 0){
+            // after lose animation
+            setTimeout(() => {
+                pacman.reset()
+                this.lives--
+                this.status = this.statusList.PLAYING
+                this.startGhostSiren()
+            }, 2000)
+        }
     }
 
     addScore(diff){
@@ -68,10 +89,6 @@ export default class Match {
 
     isLevelCompleted(){
         return this.status === this.statusList.LEVEL_COMPLETED
-    }
-
-    shouldResetGame(){
-        return this.lives < 0
     }
 
     shouldShow(liveNumber){

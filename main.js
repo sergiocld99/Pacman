@@ -101,12 +101,10 @@ const gameLoop = () => {
                 match.addPointsByGhostEat()
                 new Audio("sounds/eat_ghost.mp3").play()
             } else {
-                match.loseLive()
-                if (match.shouldResetGame()) resetGame()
-                else {
-                    pacman.reset()
-                    ghostEntities.forEach(g => g.reset())
-                }
+                match.loseLive(pacman)
+                ghostEntities.forEach(g => g.reset())
+
+                if (match.lives === 0) setTimeout(() => resetGame(), 3000)
             }
 
             return
@@ -120,7 +118,7 @@ const gameLoop = () => {
 
     pacman.draw(canvasContext, CELL_SIZE)
 
-    ghostEntities.forEach(g => {
+    if (match.status != match.statusList.LOSING) ghostEntities.forEach(g => {
         g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isStarted())
     })
 

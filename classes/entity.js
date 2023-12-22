@@ -98,4 +98,21 @@ export default class Entity {
     isToTheRight(x){
         return this.x > x
     }
+
+    rotateClockwise(){
+        switch(this.direction){
+            case 0:
+                this.direction = 2
+                break
+            case 1:
+                this.direction = 0
+                break
+            case 2:
+                this.direction = 3
+                break
+            case 3:
+                this.direction = 1
+                break
+        }
+    }
 }
