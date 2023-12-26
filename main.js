@@ -11,14 +11,17 @@ const pacmanImgs = Array(4)
 for (let i=0; i<4; i++) pacmanImgs[i] = document.getElementById(`pacman${i}`)
 
 const pacmanClosedImg = document.getElementById("pacman_closed")
-const ghostsImg = document.getElementById("ghosts")
+const eyesImg = document.getElementById("eyes")
 const levelTxt = document.getElementById("level_txt")
 const scoreTxt = document.getElementById("score_txt")
 const scaredImg = document.getElementById("scared")
 const scared2Img = document.getElementById("scared2")
 
 const liveImgs = Array(3)
-for (let i=0; i<3; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
+for (let i=0; i<liveImgs.length; i++) liveImgs[i] = document.getElementById(`live${i+1}`)
+
+const ghostImgsV2 = Array(4)
+for (let i=0; i<ghostImgsV2.length; i++) ghostImgsV2[i] = document.getElementById(`ghost${i}`)
 
 // Constants
 const BOARD_WIDTH = 28
@@ -40,12 +43,11 @@ const board = new Board(BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, FOOD_RADIUS, WALL_
 const pacman = new Pacman(board, pacmanImgs, pacmanClosedImg)
 
 const ghostEntities = Array(4)
-for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(ghostsImg, scaredImg, scared2Img, i % 4, board, pacman)
+for (let i=0; i<4; i++) ghostEntities[i] = new Ghost(eyesImg, scaredImg, scared2Img, i % 4, board, pacman)
 
 board.setGhosts(ghostEntities)
 
 let ticks = 0
-let ticks_ghost = 0
 let ticks_general = 0
 
 // Setup
@@ -83,11 +85,6 @@ const gameLoop = () => {
 
         ghostEntities.forEach(g => g.moveIfTicks(GHOST_TICK_PERIOD[entity_level]))
 
-        //if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level] + (match.areGhostsVulnerable ? 1 : 0)){
-        //    ghostEntities.forEach((g) => {g.moveAuto()})
-        //    ticks_ghost = 0
-        //}
-
         if (++ticks >= PACMAN_TICK_PERIOD[entity_level]){
             pacman.moveAuto()
             ticks = 0
@@ -98,20 +95,19 @@ const gameLoop = () => {
         canvasContext.fillText(`${match.getPointsByGhostEaten()}`, (pacman.x - 0.2) * CELL_SIZE, (pacman.y - 0.6) * CELL_SIZE)
     }
 
-    ghostEntities.forEach(g => {
+    ghostEntities.forEach((g, index) => {
         if (g.checkPacmanCollision()){
-            if (g.canBeEaten()){
-                g.eat()
-                match.addPointsByGhostEat()
-                new Audio("sounds/eat_ghost.mp3").play()
-            } else {
+            if (g.canKillPacman()){
                 match.loseLive(pacman)
                 ghostEntities.forEach(g => g.reset())
 
                 if (match.lives === 0) setTimeout(() => resetGame(), 3000)
+            } else if (g.canBeEaten()){
+                g.eat()
+                ghostEntities.forEach(g2 => g2.increaseScareDuration(500))
+                match.addPointsByGhostEat()
+                new Audio("sounds/eat_ghost.mp3").play()
             }
-
-            return
         }
     })
 
@@ -122,8 +118,9 @@ const gameLoop = () => {
 
     pacman.draw(canvasContext, CELL_SIZE)
 
-    if (match.status != match.statusList.LOSING) ghostEntities.forEach(g => {
-        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isPlaying())
+    if (match.status != match.statusList.LOSING) ghostEntities.forEach((g, index) => {
+        let imgSource = ghostImgsV2[index]
+        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isPlaying(), imgSource)
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')
