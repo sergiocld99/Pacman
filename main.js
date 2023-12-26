@@ -54,10 +54,12 @@ const setup = () => {
     
     // Keyboard listener
     document.addEventListener("keydown", e => {
-        if ((e.key === "w" || e.key === "ArrowUp") && pacman.direction != 0) pacman.moveUp()
-        else if ((e.key === "s" || e.key === "ArrowDown") && pacman.direction != 3) pacman.moveDown()
-        else if ((e.key === "a" || e.key === "ArrowLeft") && pacman.direction != 1) pacman.moveLeft()
-        else if ((e.key === "d" || e.key === "ArrowRight") && pacman.direction != 2) pacman.moveRight()
+        if (match.isPlaying()){
+            if ((e.key === "w" || e.key === "ArrowUp") && pacman.direction != 0) pacman.moveUp()
+            else if ((e.key === "s" || e.key === "ArrowDown") && pacman.direction != 3) pacman.moveDown()
+            else if ((e.key === "a" || e.key === "ArrowLeft") && pacman.direction != 1) pacman.moveLeft()
+            else if ((e.key === "d" || e.key === "ArrowRight") && pacman.direction != 2) pacman.moveRight()
+        }
     })
 }
 
@@ -76,13 +78,15 @@ const gameLoop = () => {
     canvasContext.clearRect(0,0,canvas.width, canvas.height)
     board.draw(canvasContext, Math.floor(ticks_general++ / 10))
 
-    if (match.isStarted()){
+    if (match.isPlaying()){
         let entity_level = match.getEntityLevel()
 
-        if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level] + (match.areGhostsVulnerable ? 1 : 0)){
-            ghostEntities.forEach((g) => {g.moveAuto()})
-            ticks_ghost = 0
-        }
+        ghostEntities.forEach(g => g.moveIfTicks(GHOST_TICK_PERIOD[entity_level]))
+
+        //if (++ticks_ghost >= GHOST_TICK_PERIOD[entity_level] + (match.areGhostsVulnerable ? 1 : 0)){
+        //    ghostEntities.forEach((g) => {g.moveAuto()})
+        //    ticks_ghost = 0
+        //}
 
         if (++ticks >= PACMAN_TICK_PERIOD[entity_level]){
             pacman.moveAuto()
@@ -119,7 +123,7 @@ const gameLoop = () => {
     pacman.draw(canvasContext, CELL_SIZE)
 
     if (match.status != match.statusList.LOSING) ghostEntities.forEach(g => {
-        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isStarted())
+        g.draw(canvasContext, CELL_SIZE, GHOST_IMAGE_SIZE, match.isPlaying())
     })
 
     liveImgs.forEach((img, i) => img.style.visibility = match.shouldShow(i+1) ? 'visible' : 'hidden')

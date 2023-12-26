@@ -18,6 +18,7 @@ export default class Ghost extends Entity {
         this.bounceLimit = 5 * (this.number + 1)
         this.inHouse = true
         this.scared = false
+        this.draw_ticks = 0
 
         if (this.vulnerableEndingIntervalId) clearInterval(this.vulnerableEndingIntervalId)
         if (this.vulnerableIntervalId) clearInterval(this.vulnerableIntervalId)
@@ -129,7 +130,19 @@ export default class Ghost extends Entity {
         }        
     }
 
+    moveIfTicks(levelTickPeriod){
+        if (this.scared){
+            if (super.getTick() >= levelTickPeriod + 1) this.moveAuto()
+        } else {
+            if (super.getTick() >= levelTickPeriod) this.moveAuto()
+        }
+
+        super.nextTick()
+    }
+
     moveAuto(){
+        super.resetTicks()
+
         switch (this.direction) {
             case 0:
                 this.moveUp()
@@ -236,8 +249,8 @@ export default class Ghost extends Entity {
 
     draw(context, cellSize, imageSize, increaseTicks){
         if (this.scared) {
-            if (increaseTicks) super.nextTick()
-            let variant = this.vulnerableEnding && (super.getTick() % 10 > 5)
+            if (increaseTicks) this.draw_ticks++
+            let variant = this.vulnerableEnding && (this.draw_ticks % 10 > 5)
             context.drawImage(variant ? this.scare2Img : this.scareImg, this.x * cellSize, this.y * cellSize, cellSize, cellSize)
         } else {
             const sw = imageSize, sh = imageSize

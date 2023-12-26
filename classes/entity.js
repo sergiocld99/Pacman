@@ -100,6 +100,8 @@ export default class Entity {
     }
 
     rotateClockwise(){
+        this.resetTicks()
+
         switch(this.direction){
             case 0:
                 this.direction = 2

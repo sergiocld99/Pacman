@@ -43,7 +43,6 @@ export default class Match {
         sound.play()
 
         // lose animation
-        pacman.resetTicks()
         let rotateIntervalId = setInterval(() => pacman.rotateClockwise(), 200);
         setTimeout(() => clearInterval(rotateIntervalId), 1700)
         
@@ -83,7 +82,7 @@ export default class Match {
 
     // ---- QUERIES -----------------------------------------
 
-    isStarted(){
+    isPlaying(){
         return this.status === this.statusList.PLAYING
     }
 
@@ -127,7 +126,7 @@ export default class Match {
     }
 
     playGhostSiren(){
-        if (!this.isStarted()) return
+        if (!this.isPlaying()) return
         
         this.siren = new Audio("sounds/ghosts.mp3")
         this.siren.play()
