@@ -25,11 +25,10 @@ export default class Board {
         let count = 0
 
         this.matrix.forEach(row => row.forEach(val => {
-            if (val == this.cellTypes.Food) count++
+            if (val === this.cellTypes.Food || val === this.cellTypes.BigFood) count++
         }))
 
         this.foodCount = count
-        console.log("Food count: ", this.foodCount)
     }
 
     placePaths() {
@@ -45,6 +44,10 @@ export default class Board {
         this.placeGhostHouse(13,11,6,3)
 
         this.placeFoodPaths()
+
+        // place 4 big foods
+        this.placeItemMirrored(3, 1, this.cellTypes.BigFood)
+        this.placeItemMirrored(this.height-8, 1, this.cellTypes.BigFood)
     }
 
     placeFoodPaths() {
@@ -73,29 +76,25 @@ export default class Board {
 
     placeRow(row, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[row][start+i] = this.cellTypes.Space
-            this.matrix[row][this.width-start-i-1] = this.cellTypes.Space
+            this.placeItemMirrored(row, start+i, this.cellTypes.Space)
         }
     }
 
     placeColumn(col, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[start+i][col] = this.cellTypes.Space
-            this.matrix[start+i][this.width-col-1] = this.cellTypes.Space
+            this.placeItemMirrored(start+i, col, this.cellTypes.Space)
         }
     }
 
     placeFoodRow(row, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[row][start+i] = this.cellTypes.Food
-            this.matrix[row][this.width-start-i-1] = this.cellTypes.Food
+            this.placeItemMirrored(row, start+i, this.cellTypes.Food)
         }
     }
 
     placeFoodColumn(col, start, count){
         for (let i=0; i<count; i++){
-            this.matrix[start+i][col] = this.cellTypes.Food
-            this.matrix[start+i][this.width-col-1] = this.cellTypes.Food
+            this.placeItemMirrored(start+i, col, this.cellTypes.Food)
         }
     }
 
@@ -107,23 +106,41 @@ export default class Board {
         }
     }
 
-    draw(context, level) {
+    placeItemMirrored(row, col, item){
+        this.matrix[row][col] = item
+        this.matrix[row][this.width-col-1] = item
+    }
+
+    setGhosts(ghosts){
+        this.ghosts = ghosts
+    }
+    
+    // -----------------------------
+
+    draw(context, ticks) {
         this.matrix.forEach((row, y) => {
             row.forEach((cell, x) => {
                 if (cell) {
                     context.fillStyle = cell == this.cellTypes.GhostHouse ? "#110" : "black"
                     context.fillRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize)
 
-                    if (cell == this.cellTypes.Food) this.drawFood(context, x, y)
+                    if (cell === this.cellTypes.Food) this.drawFood(context, x, y)
+                    else if (cell === this.cellTypes.BigFood) this.drawBigFood(context, x, y, ticks)
                 } else {
-                    this.drawLightWall(context, x, y, level)
+                    this.drawLightWall(context, x, y, ticks)
                 }
             })
         })
     }
 
-    drawLightWall(context, x, y, level){
-        context.strokeStyle = this.wallColors[(level-1) % 3]
+    drawLightWall(context, x, y, ticks){
+        if (this.match.isLevelCompleted() && ticks % 2){
+            context.strokeStyle = "white"
+        } else {
+            if (y >= 12 && x >= 10 && x <= 17 && y <= 16) context.strokeStyle = "red"
+            else context.strokeStyle = this.wallColors[(this.match.level-1) % 3]
+        }
+
         const wallType = this.cellTypes.Wall
         const wall_above = y == 0 || this.matrix[y-1][x] == wallType
         const wall_below = y == this.height-1 || this.matrix[y+1][x] == wallType
@@ -173,9 +190,17 @@ export default class Board {
     }
 
     drawFood(context, x, y){
+        this.drawCircle(context, x, y, this.foodRadius)
+    }
+
+    drawBigFood(context, x, y, ticks){
+        if (ticks % 2) this.drawCircle(context, x, y, this.foodRadius * 2)
+    }
+
+    drawCircle(context, x, y, radius){
         context.fillStyle = "white"
         context.beginPath()
-        context.arc((x+0.5) * this.cellSize, (y+0.5) * this.cellSize, this.foodRadius, 0, 2 * Math.PI)
+        context.arc((x+0.5) * this.cellSize, (y+0.5) * this.cellSize, radius, 0, 2 * Math.PI)
         context.fill()
     }
 
@@ -185,7 +210,7 @@ export default class Board {
         const value = this.matrix[y][x]
         const ok = value != this.cellTypes.Wall && value != this.cellTypes.GhostHouse
     
-        if (value == this.cellTypes.Food){
+        if (value === this.cellTypes.Food){
             // eat food
             this.matrix[y][x] = this.cellTypes.Space
             this.foodCount -= 1
@@ -194,6 +219,12 @@ export default class Board {
             // play sound
             const audio = new Audio(`sounds/food${this.foodCount % 2 ? 1 : 2}.mp3`)
             audio.play()
+        } else if (value === this.cellTypes.BigFood){
+            this.matrix[y][x] = this.cellTypes.Space
+            this.foodCount -= 1
+            let scare_duration = this.match.getScareDuration()
+            this.ghosts.forEach(g => g.scare(scare_duration))
+            this.match.startScareSiren(scare_duration)
         }
 
         return ok
@@ -212,6 +243,14 @@ export default class Board {
 
     isTunnel(x){
         return x <= 0 || x >= this.width
+    }
+
+    getRandomSpace(current_x, current_y, area){
+        let candidate_x = Math.round(Math.random() * area + current_x - area/2)
+        let candidate_y = Math.round(Math.random() * area + current_y - area/2) 
+
+        if (this.matrix[candidate_y][candidate_x] === this.cellTypes.Wall) return [current_x, current_y]
+        else return [candidate_x, candidate_y]
     }
 
 }

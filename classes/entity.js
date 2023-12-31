@@ -11,11 +11,15 @@ export default class Entity {
         this.x = this.start_x
         this.y = this.start_y
         this.direction = this.start_direction
+        this.resetTicks()
+    }
+
+    resetTicks(){
         this.auxiliar_tick = 0
     }
 
     nextTick(){
-        this.auxiliar_tick++
+        if (this.auxiliar_tick++ > 99) this.auxiliar_tick = 0
     }
 
     getTick(){
@@ -77,5 +81,40 @@ export default class Entity {
     checkTunnel(){
         if (this.x >= this.board.width-1) this.x = 0
         else if (this.x <= 0) this.x = this.board.width-1
+    }
+
+    isBelow(y){
+        return this.y > y
+    }
+
+    isAbove(y){
+        return this.y < y
+    }
+
+    isToTheLeft(x){
+        return this.x < x
+    }
+
+    isToTheRight(x){
+        return this.x > x
+    }
+
+    rotateClockwise(){
+        this.resetTicks()
+
+        switch(this.direction){
+            case 0:
+                this.direction = 2
+                break
+            case 1:
+                this.direction = 0
+                break
+            case 2:
+                this.direction = 3
+                break
+            case 3:
+                this.direction = 1
+                break
+        }
     }
 }
