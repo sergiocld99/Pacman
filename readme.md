@@ -4,4 +4,4 @@ Basic implementation of this classic game using JavaScript classes and canvas fu
 ## Launch
 Open this project in VSCode and launch main.js using Live Server extension.
 
-![image](https://github.com/sergiocarp10/Pacman/assets/66924320/4f186152-24e8-4a5d-b992-460c23bad45e)
+![image](https://github.com/sergiocarp10/Pacman/blob/master/ezgif-5-9d29185f6d.gif)
